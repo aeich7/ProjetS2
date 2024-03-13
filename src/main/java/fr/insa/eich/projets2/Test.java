@@ -1,5 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
 package fr.insa.eich.projets2;
@@ -8,9 +9,6 @@ package fr.insa.eich.projets2;
  *
  * @author eicha
  */
-public class ProjetS2 {
+public class Test {
 
-    public static void main(String[] args) {
-        
-    }
 }
