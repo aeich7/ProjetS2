@@ -10,19 +10,29 @@ package fr.insa.eich.projets2;
  */
 public class Mur {
     private int id;
-    private Coin CoinDebut;
-    private Coin CoinFin;
-    private double longueur;
+    private double xDeb;
+    private double xFin;
+    private double yDeb;
+    private double yFin;
     private double hauteur;
-    private int nbreFenetres;
-    private int nbrePortes;
-    
-    public Mur longueur(double x1, double x2, double y1, double y2){
-        if (x1 == x2){
-            this.longueur = y2 - y1;
+    private double longueur;
+   
+
+    public Mur(int id, double xDeb, double xFin, double yDeb, double yFin, double hauteur) {
+        this.id = id;
+        this.xDeb = xDeb;
+        this.xFin = xFin;
+        this.yDeb = yDeb;
+        this.yFin = yFin;
+        this.hauteur = hauteur;
+    }
+           
+    public  Mur longueur(){
+        if (this.xDeb == this.xFin){
+            this.longueur = this.yFin - this.yDeb;
         }
-        else if (y1 == y2){
-            this.longueur = x2 - x1;
+        else if (this.yDeb == this.yFin){
+            this.longueur = this.xFin - this.xDeb;
         }
         return this;
     }
