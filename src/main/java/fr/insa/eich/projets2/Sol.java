@@ -16,7 +16,7 @@ public class Sol {
    private int id;
    
    
-   
+  
    public double surface() {
    return (double) (this.longueur * this.largeur);
  }

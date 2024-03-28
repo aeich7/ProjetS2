@@ -3,24 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.eich.projets2;
-import java.util.*;
 
 /**
  *
  * @author arbre
  */
-public class Appartement {
+public class Niveau {
     private int id;
-    private int idétage ;
-    private List<Piece> ListePiece = new ArrayList<>();
+    private double hauteurSousPlafond;
+    private List<Appartement> ListeAppartement = new ArrayList<>();
     
     
-    public void AjouterPiece(Piece Piece1){
-        ListePiece.add(Piece1);
+    public void AjouterAppartement(Appartement Appartement1){
+        ListeAppartement.add(Appartement1);
     }
 
-    public List<Piece> getListePiece() {
-        return ListePiece;
+    public List<Appartement> getListeAppartement() {
+        return ListeAppartement;
     }
     
     
@@ -31,5 +30,6 @@ public class Appartement {
     public void setId(int id) {
         this.id = id;
     }
+    
     
 }
