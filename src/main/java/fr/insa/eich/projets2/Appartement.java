@@ -12,15 +12,14 @@ import java.util.*;
 public class Appartement {
     private int id;
     private int idétage ;
-    private List<Piece> ListePiece = new ArrayList<>();
-    
+    private List<Piece> ListePieces = new ArrayList<>();
     
     public void AjouterPiece(Piece Piece1){
-        ListePiece.add(Piece1);
+        ListePieces.add(Piece1);
     }
 
     public List<Piece> getListePiece() {
-        return ListePiece;
+        return ListePieces;
     }
     
     
