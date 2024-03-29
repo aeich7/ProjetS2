@@ -11,8 +11,26 @@ import java.util.*;
  */
 public class Appartement {
     private int id;
-    private int idétage ;
+    private int etage ;
+    private int numero;
     private List<Piece> ListePieces = new ArrayList<>();
+    private double surfaceappartement;
+    
+    public Appartement( int etage,int numero){
+        this.etage=etage;
+        this.numero=numero;
+    }
+    
+    public void afficher(){
+        System.out.println("Etage:"+etage+", numero:"+numero);
+    }
+    public double surfaceappartement(){
+        surfaceappartement=0;
+        for(Piece Piece : Piece){
+         surfaceappartement+=piece.getSurface();   
+        }
+        return surfaceappartement;
+            }
     
     public void AjouterPiece(Piece Piece1){
         ListePieces.add(Piece1);

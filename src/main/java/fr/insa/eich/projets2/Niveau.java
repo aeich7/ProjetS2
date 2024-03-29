@@ -12,7 +12,13 @@ import java.util.*;
 public class Niveau {
     private int id;
     private double hauteurSousPlafond;
+    private double hauteurBatiment;
     private List<Appartement> ListeAppartements = new ArrayList<>();
+    
+    public void afficher (int etage, double hauteurSousPlafond){
+        hauteurBatiment=etage*hauteurSousPlafond;
+        System.out.println("la hauteur du batiment est:"+hauteurBatiment);
+    }
     
     
     public void AjouterAppartement(Appartement Appartement1){
