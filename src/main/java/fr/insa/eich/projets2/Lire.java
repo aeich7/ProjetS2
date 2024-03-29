@@ -1,3 +1,4 @@
+package fr.insa.eich.projets2;
 import java.io.*;
 
 /**
