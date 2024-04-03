@@ -10,29 +10,25 @@ package fr.insa.eich.projets2;
  */
 public class Mur {
     private int id;
-    private double xDeb;
-    private double xFin;
-    private double yDeb;
-    private double yFin;
+    private Coin coinDebut;
+    private Coin coinFin;
     private double hauteur;
     private double longueur;
    
 
-    public Mur(int id, double xDeb, double xFin, double yDeb, double yFin, double hauteur) {
+    public Mur(int id, Coin coinDebut, Coin coinFin, double hauteur) {
         this.id = id;
-        this.xDeb = xDeb;
-        this.xFin = xFin;
-        this.yDeb = yDeb;
-        this.yFin = yFin;
+        this.coinDebut = coinDebut;
+        this.coinFin = coinFin;
         this.hauteur = hauteur;
     }
            
     public  Mur longueur(){
-        if (this.xDeb == this.xFin){
-            this.longueur = this.yFin - this.yDeb;
+        if (this.coinDebut.getX() == this.coinFin.getX()){
+            this.longueur = this.coinFin.getY() - this.coinDebut.getY();
         }
-        else if (this.yDeb == this.yFin){
-            this.longueur = this.xFin - this.xDeb;
+        else if (this.coinDebut.getY() == this.coinFin.getY()){
+            this.longueur = this.coinFin.getX()- this.coinDebut.getX();
         }
         return this;
     }
@@ -52,5 +48,31 @@ public class Mur {
     public void setHauteur(double hauteur) {
         this.hauteur = hauteur;
     }
+
+    public Coin getCoinDebut() {
+        return coinDebut;
+    }
+
+    public void setCoinDebut(Coin coinDebut) {
+        this.coinDebut = coinDebut;
+    }
+
+    public Coin getCoinFin() {
+        return coinFin;
+    }
+
+    public void setCoinFin(Coin coinFin) {
+        this.coinFin = coinFin;
+    }
     
+    
+    public double getLongueur() {
+        return longueur;
+    }
+    
+    
+    public void afficher(){
+        System.out.println("Id du mur :"+this.getId());
+        System.out.print("Coin début :"+this.getCoinDebut()+" Coin Fin : "+this.getCoinFin());
+    }
 }

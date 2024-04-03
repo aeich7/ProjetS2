@@ -3,18 +3,59 @@
  */
 
 package fr.insa.eich.projets2;
-import java.util.*;
+import java.util.Scanner;
 /**
  *
  * @author eicha
  */
 public class ProjetS2 {
+    private static int pointIdCompteur = 0;
+    private static int murIdCompteur = 0;
+    private static int pieceIdCompteur = 0;
 
     public static void main(String[] args) {
-        Mur Mur1 = new Mur(1,2.0,3.0,4.0,5.0,6.0);
-        Piece Piece1 = new Piece(1,2);
-        
-        Piece1.AjouterMur(Mur1);
-        
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Combien de pièces voulez-vous créer ?");
+        int nombreDePieces = scanner.nextInt();
+        scanner.nextLine(); 
+
+        for (int i = 0; i < nombreDePieces; i++) {
+            int pieceId = ++pieceIdCompteur;
+            Piece piece = new Piece(pieceId, 3);          
+            System.out.println("Combien de murs pour la pièce " + pieceId + " ?");
+            int nombreDeMurs = scanner.nextInt();
+            scanner.nextLine(); 
+
+            for (int j = 0; j < nombreDeMurs; j++) {
+                int murId = ++murIdCompteur;
+
+                System.out.println("Entrer les coordonnées du point de début du mur " + murId);
+                System.out.print("x: ");
+                double debutX = scanner.nextDouble();
+                System.out.print("y: ");
+                double debutY = scanner.nextDouble();
+                scanner.nextLine(); 
+
+                int pointDebutId = ++pointIdCompteur;
+                Coin debut = new Coin(pointDebutId, debutX, debutY);
+
+                System.out.println("Entrer les coordonnées du point de fin du mur " + murId);
+                System.out.print("x: ");
+                double finX = scanner.nextDouble();
+                System.out.print("y: ");
+                double finY = scanner.nextDouble();
+                scanner.nextLine(); 
+
+                int pointFinId = ++pointIdCompteur;
+                Coin fin = new Coin(pointFinId, finX, finY);
+
+                Mur mur = new Mur(murId, debut, fin, 3.0);
+                piece.AjouterMur(mur);
+            }
+            piece.afficher();
+        }
+
+        scanner.close();
     }
 }

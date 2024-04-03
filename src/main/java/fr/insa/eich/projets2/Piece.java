@@ -13,7 +13,7 @@ public class Piece {
     private int id;
     private int sol;
     private int plafond;
-    private List<Mur> ListeMurs = new ArrayList<>();
+    private List<Mur> Murs = new ArrayList<>();
 
     public Piece(int id, int plafond) {
         this.id = id;
@@ -44,14 +44,20 @@ public class Piece {
         this.plafond = plafond;
     }
     
-    public void AjouterMur(Mur Mur1){
-        ListeMurs.add(Mur1);
-    }
-
     public List<Mur> getListeMurs() {
-        return ListeMurs;
+        return Murs;
     }
-       
+    
+    public void AjouterMur(Mur Mur){
+        Murs.add(Mur);
+    }
+    
+    public void afficher(){
+        System.out.println("Piece numéro : "+this.getId());
+        for (Mur mur : Murs ){
+            System.out.println("Id du mur : "+mur.getId()+" Début | x : "+mur.getCoinDebut().getX()+" y: "+mur.getCoinDebut().getY()+"| Fin | x : "+mur.getCoinFin().getX()+" y : "+mur.getCoinFin().getY()+" |");
+        }
         
     }
+}  
     
