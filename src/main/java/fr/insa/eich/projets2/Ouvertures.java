@@ -12,26 +12,43 @@ import java.util.logging.Logger;
  */
 public class Ouvertures {
     private int id; 
-    private int nombre_fenetres;
-    private int nombre_portes; 
-    private double x; 
-    private double y; 
-    private double aire_ouvertures; 
-    
-     public Ouvertures(int id, int nombre_fenetres, int nombre_portes, double aire_ouverture) {
+    private double dim_x;  // pour connaitre longueur d'un côté 
+    private double dim_y;   //pour connaitre longueur de l'autre côté 
+    private double aire_ouvertures;  
+
+    public Ouvertures(int id, double dim_x, double dim_y) {
         this.id = id;
-        this.nombre_fenetres = nombre_fenetres;
-        this.nombre_portes = nombre_portes;
-        this.aire_ouvertures = aire_ouverture;
+        this.dim_x = dim_x;
+        this.dim_y = dim_y;
     }
-     public Ouvertures aire (int id, int nombre_portes, int nombre_fenetres, double x, double y){
-         if (x==1.20) {
-            this.aire_ouvertures = x*y*nombre_fenetres;
+    
+     public Ouvertures aire (int id, int nombre_portes, int nombre_fenetres, double dim_x, double dim_y){
+         if (dim_x==1.20) {
+            this.aire_ouvertures = dim_x*dim_y*nombre_fenetres;
          }
-         else if ((x==0.90)||(x==2.10)){
-             this.aire_ouvertures = x*y*nombre_portes;
+         else if ((dim_x==0.90)||(dim_x==2.10)){
+             this.aire_ouvertures = dim_x*dim_y*nombre_portes;
          }
          return this;
      }
-         
+     public String toString (double dim_x, double dim_y){
+    if (dim_x ==1.20){
+        return "fenêtre";
+    }
+    if ((dim_x==0.90)||(dim_x==2.10)){
+        return "porte";
+    }
+    else {
+        return "tremis";
+    }
+}
+
+    public int getId() {
+        return id;
+    }
+     
+      public void afficher() {
+    System.out.println("L'ouverture est un(e) "+this.toString());
+    System.out.println("Id du (de la) " +this.toString()+ " est " +this.getId()+"Dim_x : "+this.dim_x + "Dim_y : "+this.dim_y); 
+}   
 }
