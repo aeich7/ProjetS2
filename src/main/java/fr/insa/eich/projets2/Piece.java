@@ -18,9 +18,7 @@ public class Piece {
     public Piece(int id) {
         this.id = id;
     }
-
     
-
     public int getId() {
         return id;
     }

@@ -23,14 +23,14 @@ public class Mur {
         this.hauteur = hauteur;
     }
            
-    public  Mur longueur(){
+    public  double longueur(){
         if (this.coinDebut.getX() == this.coinFin.getX()){
             this.longueur = this.coinFin.getY() - this.coinDebut.getY();
         }
         else if (this.coinDebut.getY() == this.coinFin.getY()){
             this.longueur = this.coinFin.getX()- this.coinDebut.getX();
         }
-        return this;
+        return this.longueur;
     }
 
     public int getId() {
@@ -80,5 +80,12 @@ public class Mur {
     public String toString() {
         return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut + ", coinFin=" + coinFin + ", hauteur=" + hauteur + ", longueur=" + longueur + '}';
     }
+    
+  public double calculSurface(int nbPortes, int nbFenetres){
+        double surfaceTotale = this.longueur()*hauteur; // Assumons que cette méthode renvoie la surface totale de la pièce.
+        double surfacePortes = nbPortes * 0.90 * 2.10; // Surface totale occupée par les portes.
+        double surfaceFenetres = nbFenetres * 1.20 * 1.20; // Surface totale occupée par les fenêtres.
+        return surfaceTotale - (surfacePortes + surfaceFenetres);
+}
     
 }

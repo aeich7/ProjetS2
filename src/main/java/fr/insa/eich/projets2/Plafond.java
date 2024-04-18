@@ -14,15 +14,9 @@ import java.util.List;
  */
 public class Plafond  {
     private int id ;
-    private double surface;
     private List<Coin> Coins = new ArrayList<>();
     
-    public double getsurface() {
-        return surface;
-    }
-     public void setsurface(double surface) {
-        this.surface = surface;
-    }
+    
     public int getId() {
         return id;
     }
@@ -33,10 +27,34 @@ public class Plafond  {
      public void AjouterCoin(Coin Coin){
         Coins.add(Coin);
     }
-
-    @Override
-    public String toString() {
-        return "Plafond{" + "id=" + id + ", surface=" + surface + ", Coins=" + Coins + '}';
+    
+    public double calculSurface() {
+        if (Coins == null || Coins.size() != 4) {
+            throw new IllegalArgumentException("Il doit y avoir exactement quatre coins.");
+        }
+        double minX = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxY = Double.MIN_VALUE;
+        for (Coin coin : Coins) {
+            if (coin.getX() < minX) {
+                minX = coin.getX();
+            }
+            if (coin.getX() > maxX) {
+                maxX = coin.getX();
+            }
+            if (coin.getY() < minY) {
+                minY = coin.getY();
+            }
+            if (coin.getY() > maxY) {
+                maxY = coin.getY();
+            }
+          
+        }
+        double longueur = maxX - minX;
+        double largeur = maxY - minY;
+        double surface = longueur * largeur;
+        return surface;
     }
    
      }

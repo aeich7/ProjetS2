@@ -49,7 +49,7 @@ public class ProjetS2 {
                 scanner.nextLine(); 
                 int pointFinId = ++pointIdCompteur;
                 Coin fin = new Coin(pointFinId, finX, finY);
-                if ((piece.getListeMurs() != null)||(piece.getListeMurs().isEmpty())){
+                if (piece.getListeMurs() != null){
                     for (Mur mur : piece.getListeMurs()){
                         if ((mur.getCoinDebut().equals(debut))) {
                             debut = mur.getCoinDebut();
