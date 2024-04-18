@@ -4,6 +4,8 @@
 
 package fr.insa.eich.projets2;
 import java.util.Scanner;
+import java.util.*;
+
 /**
  *
  * @author eicha
@@ -15,14 +17,14 @@ public class ProjetS2 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
+         
         System.out.println("Combien de pièces voulez-vous créer ?");
         int nombreDePieces = scanner.nextInt();
         scanner.nextLine(); 
 
         for (int i = 0; i < nombreDePieces; i++) {
             int pieceId = ++pieceIdCompteur;
-            Piece piece = new Piece(pieceId, 3);          
+            Piece piece = new Piece(pieceId);          
             System.out.println("Combien de murs pour la pièce " + pieceId + " ?");
             int nombreDeMurs = scanner.nextInt();
             scanner.nextLine(); 
@@ -39,23 +41,45 @@ public class ProjetS2 {
 
                 int pointDebutId = ++pointIdCompteur;
                 Coin debut = new Coin(pointDebutId, debutX, debutY);
-
                 System.out.println("Entrer les coordonnées du point de fin du mur " + murId);
                 System.out.print("x: ");
                 double finX = scanner.nextDouble();
                 System.out.print("y: ");
                 double finY = scanner.nextDouble();
                 scanner.nextLine(); 
-
                 int pointFinId = ++pointIdCompteur;
                 Coin fin = new Coin(pointFinId, finX, finY);
-
+                if ((piece.getListeMurs() != null)||(piece.getListeMurs().isEmpty())){
+                    for (Mur mur : piece.getListeMurs()){
+                        if ((mur.getCoinDebut().equals(debut))) {
+                            debut = mur.getCoinDebut();
+                            pointIdCompteur = pointIdCompteur -1;
+                        }
+                        else if(mur.getCoinFin().equals(debut)){
+                            debut = mur.getCoinFin();
+                            pointIdCompteur = pointIdCompteur -1;
+                        }
+                        else if ((mur.getCoinDebut().equals(fin))) {
+                            fin = mur.getCoinDebut();
+                            pointIdCompteur = pointIdCompteur -1;
+                        }
+                        else if(mur.getCoinFin().equals(fin)){
+                            fin = mur.getCoinFin();
+                            pointIdCompteur = pointIdCompteur -1;        
+                    } 
+                }                   
+                
+            }
                 Mur mur = new Mur(murId, debut, fin, 3.0);
                 piece.AjouterMur(mur);
-            }
-            piece.afficher();
         }
-
-        scanner.close();
+       piece.afficher();
+      
+        
     }
+    scanner.close();
+    }
+    
 }
+
+

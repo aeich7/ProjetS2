@@ -11,14 +11,15 @@ import java.util.*;
  */
 public class Piece {
     private int id;
-    private int sol;
-    private int plafond;
+    private Sol sol;
+    private Plafond plafond;
     private List<Mur> Murs = new ArrayList<>();
 
-    public Piece(int id, int plafond) {
+    public Piece(int id) {
         this.id = id;
-        this.plafond = plafond;
     }
+
+    
 
     public int getId() {
         return id;
@@ -28,21 +29,23 @@ public class Piece {
         this.id = id;
     }
 
-    public int getSol() {
+    public Sol getSol() {
         return sol;
     }
 
-    public void setSol(int sol) {
+    public void setSol(Sol sol) {
         this.sol = sol;
     }
 
-    public int getPlafond() {
+    public Plafond getPlafond() {
         return plafond;
     }
 
-    public void setPlafond(int plafond) {
+    public void setPlafond(Plafond plafond) {
         this.plafond = plafond;
     }
+
+   
     
     public List<Mur> getListeMurs() {
         return Murs;
@@ -51,13 +54,19 @@ public class Piece {
     public void AjouterMur(Mur Mur){
         Murs.add(Mur);
     }
+
+    @Override
+    public String toString() {
+        return "Piece{" + "id=" + id + ", IDsol=" + sol.getId() + ", IDplafond=" + plafond.getId() + ", Murs=" + Murs + '}';
+    }
     
+   
     public void afficher(){
         System.out.println("Piece numéro : "+this.getId());
         for (Mur mur : Murs ){
             System.out.println("Id du mur : "+mur.getId()+" Début | x : "+mur.getCoinDebut().getX()+" y: "+mur.getCoinDebut().getY()+"| Fin | x : "+mur.getCoinFin().getX()+" y : "+mur.getCoinFin().getY()+" |");
         }
-        
+    
     }
 }  
     

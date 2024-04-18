@@ -8,7 +8,7 @@ package fr.insa.eich.projets2;
  *
  * @author eicha
  */
-public class Coin {
+public class Coin  {
     private int id;
     private double x;
     private double y;
@@ -42,6 +42,12 @@ public class Coin {
     public void setY(double y) {
         this.y = y;
     }
-    
-    
+   
+   public boolean equals(Coin coin) {
+        return ((Math.abs(coin.getX() - this.x) <= 0.5) && (Math.abs(coin.getY() - this.y) <= 0.5));
+    }
 }
+
+
+    
+

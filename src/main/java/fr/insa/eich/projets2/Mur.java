@@ -70,9 +70,15 @@ public class Mur {
         return longueur;
     }
     
-    
+  
     public void afficher(){
         System.out.println("Id du mur :"+this.getId());
         System.out.print("Coin début :"+this.getCoinDebut()+" Coin Fin : "+this.getCoinFin());
     }
+
+    @Override
+    public String toString() {
+        return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut + ", coinFin=" + coinFin + ", hauteur=" + hauteur + ", longueur=" + longueur + '}';
+    }
+    
 }
