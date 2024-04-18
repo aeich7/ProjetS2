@@ -39,49 +39,48 @@ public class Revetements {
 		}
 		return compteur;
 	}
-   public static String [][]Tableau (String Fichier, String Contenu [][]) {
-      int line=0; 
-     try
-       {
-           BufferedReader in = new BufferedReader (new FileReader("Tableau.txt"));
-           String ligne, mot; 
-           while ((ligne = in.readLine())!= null){
-               int curseur =0;
-               int colonne = 0; 
-               while (curseur<ligne.length()){
-                   if (ligne.charAt(curseur)==';'){
-                       curseur = curseur +1;
-                   }
-                   else { 
-                       mot = "";
-                            
-               while (ligne.charAt(curseur ) != ';'){
-                   if ((int)ligne.charAt(curseur)==233){ // pour gérer les é
-                       mot= mot+'e';
-                   }
-                   else {
-                   if ((int)ligne.charAt(curseur)==232){ // pour gérer les è
-                       mot=mot +'e';
-                   }
-                   else {
-                   mot= mot+ligne.charAt(curseur); 
-               }
+    public static String[][] Tableau(String Fichier, String Contenu[][]) {
+        int line = 0;
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("Tableau.txt"));
+            String ligne;
+            while ((ligne = in.readLine()) != null) {
+                int curseur = 0;
+                int colonne = 0;
+                ligne = ligne + " ";
+                while (curseur < ligne.length()) {
+                    if (ligne.charAt(curseur) == ';') {
+                        curseur = curseur + 1;
+                    } else {
+                        StringBuilder mot = new StringBuilder();
+                        while (curseur < ligne.length() && ligne.charAt(curseur) != ';') {
+                            char currentChar = ligne.charAt(curseur);
+                            if (currentChar == 'é' || currentChar == 'è') {
+                                mot.append('e');
+                            } else {
+                                mot.append(currentChar);
+                            }
+                            curseur = curseur + 1;
+                        }
+                        Contenu[line][colonne] = mot.toString();
+                        colonne = colonne + 1;
+                    }
+                }
+                line = line + 1;
             }
-                   curseur = curseur +1; 
-                   }
-               Contenu[line][colonne] = mot; 
-               colonne = colonne +1;
-                   }  
-       }
-               line =line+1;
-           }
-       }
-       catch (FileNotFoundException err){
-           System.out.println("Erreur, le fichier n'existe pas ! /n" + err);}
-       catch (IOException err){
-           System.out.println("Erreur : /n "+err);}
-     return Contenu; 
-       }
-           }
-   
+            in.close();
+        } catch (FileNotFoundException err) {
+            System.out.println("Erreur, le fichier n'existe pas ! /n" + err);
+        } catch (IOException err) {
+            System.out.println("Erreur : /n " + err);
+        }
+        return Contenu;
+    }
+
+  public static void main (){
+      String[][] contenu = new String[19][6];  // initialisation d'une matrice pour y mettre les données récupérées dans la méthode Tableau
+      String[][] resultat = Tableau("Tableau.txt", contenu); // création d'une autre matrice pour y mettre celle créé dans la méthode Tableau pour pouvoir l'afficher
+  }  
+}
+
 
