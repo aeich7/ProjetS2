@@ -12,6 +12,7 @@ import java.util.*;
 public class  Batiment {
     int compteurID = 0;
     private int id;
+    private int nbNiveaux;
     private List<Niveau> ListeNiveaux= new ArrayList<>();
     private String type;
 
@@ -47,6 +48,21 @@ public class  Batiment {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Batiment{" + "compteurID=" + compteurID + ", id=" + id + ", ListeNiveaux=" + ListeNiveaux + ", type=" + type + '}';
+    }
+
+    public int getNbNiveaux() {
+        return nbNiveaux;
+    }
+
+    public void setNbNiveaux(int nbNiveaux) {
+        this.nbNiveaux = nbNiveaux;
+    }
+    
+    
         
     }
 

@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class Niveau {
     private int id;
+    private int idCompteur =0;
     private double hauteurSousPlafond;
     private double hauteurBatiment;
     private double nbrniveau;
@@ -20,11 +21,14 @@ public class Niveau {
         hauteurBatiment=etage*hauteurSousPlafond;
         System.out.println("la hauteur du batiment est:"+hauteurBatiment);
     }
-    
-    public Niveau (int nbrniveau){
-        this.nbrniveau=nbrniveau;
-        
+
+    public Niveau() {
+        idCompteur++;
+        this.id = idCompteur;
     }
+    
+    
+    
     
     public void afficher(){
         System.out.println("le niveau du batiment est "+nbrniveau);
