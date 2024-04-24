@@ -57,8 +57,11 @@ public class Piece {
 
     @Override
     public String toString() {
-        return "Piece{" + "id=" + id + ", IDsol=" + sol.getId() + ", IDplafond=" + plafond.getId() + ", Murs=" + Murs + '}';
+        return "Piece{" + "id=" + id + ", Murs=" + Murs + '}';
     }
+
+    
+    
     
    
     public void afficher(){
