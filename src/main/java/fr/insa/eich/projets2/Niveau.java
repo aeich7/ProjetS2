@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class Niveau {
     private int id;
-    private int idCompteur =0;
+    private static int idCompteur =0;
     private double hauteurSousPlafond;
     private double hauteurBatiment;
     private double nbrniveau;
@@ -48,6 +48,11 @@ public class Niveau {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Niveau{" + "id=" + id + ", hauteurSousPlafond=" + hauteurSousPlafond + ", hauteurBatiment=" + hauteurBatiment + ", nbrniveau=" + nbrniveau + ", ListeAppartements=" + ListeAppartements + '}';
     }
     
     

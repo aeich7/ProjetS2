@@ -10,13 +10,15 @@ import java.util.*;
  * @author eicha
  */
 public class Piece {
+    private static int idCompteur = 0;
     private int id;
     private Sol sol;
     private Plafond plafond;
     private List<Mur> Murs = new ArrayList<>();
 
     public Piece(int id) {
-        this.id = id;
+        idCompteur++;
+        this.id = idCompteur;
     }
     
     public int getId() {

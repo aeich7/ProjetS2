@@ -36,6 +36,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ComboBox;
 
 /**
  *
@@ -45,10 +46,14 @@ public class MainPane extends BorderPane{
     
     private Controleur controleur;
     
+    private ComboBox<String> cbNiveaux; // ComboBox pour les niveaux
+    
     private VBox vbHaut;
     private VBox vbDroit;
     
     private MenuBar menubar;
+    
+  
     
     private Menu mFichier;
     private Menu mAide;
@@ -82,12 +87,22 @@ public class MainPane extends BorderPane{
         
         this.rbCoins = new RadioButton("Coins");
         rbCoins.setOnAction(e ->{
-            this.controleur.toggleCoinDrawMode(); 
+            this.controleur.ActivCoinDrawMode(); 
+        });
+        this.rbMurs = new RadioButton("Murs");
+        rbMurs.setOnAction(a ->{
+            this.controleur.DesactivCoinDrawMode(); 
+        });
+
+        this.rbPieces= new RadioButton("Piece");
+        rbPieces.setOnAction(a ->{
+            this.controleur.DesactivCoinDrawMode(); 
         });
         
-        this.rbMurs = new RadioButton("Murs");
-        this.rbPieces= new RadioButton("Piece");
+        this.cbNiveaux = new ComboBox<>(); // Initialisation de ComboBox
+        this.cbNiveaux.setPromptText("Sélectionnez un niveau");
 
+        
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
         mFichier.getItems().addAll(newItem,openItem,SaveItem);// Sous-menus de fichier
         newItem.setOnAction(t ->{
@@ -101,7 +116,7 @@ public class MainPane extends BorderPane{
         rbCoins.setToggleGroup(Options);
         rbMurs.setToggleGroup(Options);
         rbPieces.setToggleGroup(Options);
-        this.vbDroit = new VBox(rbCoins, rbMurs, rbPieces);
+        this.vbDroit = new VBox(cbNiveaux,rbCoins, rbMurs, rbPieces);
         this.setRight(vbDroit);
         this.controleur.changeEtat(0);
     }
@@ -146,6 +161,15 @@ public class MainPane extends BorderPane{
         return vbDroit;
     }
 
+    public Controleur getControleur() {
+        return controleur;
+    }
+
+    public ComboBox<String> getCbNiveaux() {
+        return cbNiveaux;
+    }
+    
+   
     
     
 }

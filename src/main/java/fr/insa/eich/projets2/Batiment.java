@@ -10,7 +10,7 @@ import java.util.*;
  * @author arbre
  */
 public class  Batiment {
-    int compteurID = 0;
+    private static int compteurID = 0;
     private int id;
     private int nbNiveaux;
     private List<Niveau> ListeNiveaux= new ArrayList<>();
@@ -51,7 +51,7 @@ public class  Batiment {
 
     @Override
     public String toString() {
-        return "Batiment{" + "compteurID=" + compteurID + ", id=" + id + ", ListeNiveaux=" + ListeNiveaux + ", type=" + type + '}';
+        return "Batiment{" + "id=" + id + ", ListeNiveaux=" + ListeNiveaux + ", type=" + type + '}';
     }
 
     public int getNbNiveaux() {

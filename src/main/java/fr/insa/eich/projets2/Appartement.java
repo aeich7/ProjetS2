@@ -10,13 +10,15 @@ import java.util.*;
  * @author arbre
  */
 public class Appartement {
+    private static int idCompteur = 0;
     private int id;
     private int niveau;
     private List<Piece> ListePieces = new ArrayList<>();
     private double surfaceAppartement;
     
-    public Appartement( int id ,int niveau){
-        this.id = id;
+    public Appartement(int niveau){
+        idCompteur++;
+        this.id = idCompteur;
         this.niveau =niveau;
     }
     public double surfaceAppartementAuSol(){
@@ -44,5 +46,12 @@ public class Appartement {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", ListePieces=" + ListePieces + ", surfaceAppartement=" + surfaceAppartement + '}';
+    }
+    
+    
     
 }
