@@ -16,7 +16,7 @@ public class Piece {
     private Plafond plafond;
     private List<Mur> Murs = new ArrayList<>();
 
-    public Piece(int id) {
+    public Piece() {
         idCompteur++;
         this.id = idCompteur;
     }

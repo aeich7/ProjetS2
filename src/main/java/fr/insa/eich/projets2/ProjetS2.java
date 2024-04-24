@@ -24,7 +24,7 @@ public class ProjetS2 {
 
         for (int i = 0; i < nombreDePieces; i++) {
             int pieceId = ++pieceIdCompteur;
-            Piece piece = new Piece(pieceId);          
+            Piece piece = new Piece();          
             System.out.println("Combien de murs pour la pièce " + pieceId + " ?");
             int nombreDeMurs = scanner.nextInt();
             scanner.nextLine(); 
@@ -40,7 +40,7 @@ public class ProjetS2 {
                 scanner.nextLine(); 
 
                 int pointDebutId = ++pointIdCompteur;
-                Coin debut = new Coin(pointDebutId, debutX, debutY);
+                Coin debut = new Coin(debutX, debutY);
                 System.out.println("Entrer les coordonnées du point de fin du mur " + murId);
                 System.out.print("x: ");
                 double finX = scanner.nextDouble();
@@ -48,7 +48,7 @@ public class ProjetS2 {
                 double finY = scanner.nextDouble();
                 scanner.nextLine(); 
                 int pointFinId = ++pointIdCompteur;
-                Coin fin = new Coin(pointFinId, finX, finY);
+                Coin fin = new Coin(finX, finY);
                 if (piece.getListeMurs() != null){
                     for (Mur mur : piece.getListeMurs()){
                         if ((mur.getCoinDebut().equals(debut))) {
@@ -70,7 +70,7 @@ public class ProjetS2 {
                 }                   
                 
             }
-                Mur mur = new Mur(murId, debut, fin, 3.0);
+                Mur mur = new Mur(debut, fin);
                 piece.AjouterMur(mur);
         }
        piece.afficher();

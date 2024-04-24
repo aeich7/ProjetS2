@@ -9,6 +9,7 @@ package fr.insa.eich.projets2;
  * @author eicha
  */
 public class Mur {
+    private static int compteurId = 0;
     private int id;
     private Coin coinDebut;
     private Coin coinFin;
@@ -16,11 +17,11 @@ public class Mur {
     private double longueur;
    
 
-    public Mur(int id, Coin coinDebut, Coin coinFin, double hauteur) {
-        this.id = id;
+    public Mur(Coin coinDebut, Coin coinFin) {
+        compteurId++;
+        this.id = compteurId;
         this.coinDebut = coinDebut;
         this.coinFin = coinFin;
-        this.hauteur = hauteur;
     }
            
     public  double longueur(){
@@ -86,6 +87,37 @@ public class Mur {
         double surfacePortes = nbPortes * 0.90 * 2.10; // Surface totale occupée par les portes.
         double surfaceFenetres = nbFenetres * 1.20 * 1.20; // Surface totale occupée par les fenêtres.
         return surfaceTotale - (surfacePortes + surfaceFenetres);
+}
+  
+    public boolean isNear(double x, double y, double threshold) {
+    Coin debut = this.getCoinDebut();
+    Coin fin = this.getCoinFin();
+    
+    double dx = fin.getX() - debut.getX();
+    double dy = fin.getY() - debut.getY();
+    double lengthSquared = dx * dx + dy * dy;
+    
+    // Calculer la projection t du point (x, y) sur la ligne (debut -> fin)
+    double t = ((x - debut.getX()) * dx + (y - debut.getY()) * dy) / lengthSquared;
+
+    // Trouver le point le plus proche sur la ligne au point (x, y)
+    double nearestX, nearestY;
+    if (t < 0) {
+        nearestX = debut.getX();
+        nearestY = debut.getY();
+    } else if (t > 1) {
+        nearestX = fin.getX();
+        nearestY = fin.getY();
+    } else {
+        nearestX = debut.getX() + t * dx;
+        nearestY = debut.getY() + t * dy;
+    }
+
+    // Calculer la distance du point (x, y) au point le plus proche sur la ligne
+    double distance = Math.sqrt((x - nearestX) * (x - nearestX) + (y - nearestY) * (y - nearestY));
+
+    // Retourner si cette distance est inférieure au seuil
+    return distance <= threshold;
 }
     
 }

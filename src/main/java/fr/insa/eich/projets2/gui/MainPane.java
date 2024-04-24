@@ -87,16 +87,22 @@ public class MainPane extends BorderPane{
         
         this.rbCoins = new RadioButton("Coins");
         rbCoins.setOnAction(e ->{
-            this.controleur.ActivCoinDrawMode(); 
+            this.controleur.ActivCoinDrawMode();
+            this.controleur.DesactivWallMode();
+            this.controleur.DesactivPieceMode();
         });
         this.rbMurs = new RadioButton("Murs");
         rbMurs.setOnAction(a ->{
-            this.controleur.DesactivCoinDrawMode(); 
+            this.controleur.ActivWallMode();
+            this.controleur.DesactivCoinDrawMode();
+            this.controleur.DesactivPieceMode();
         });
 
         this.rbPieces= new RadioButton("Piece");
         rbPieces.setOnAction(a ->{
-            this.controleur.DesactivCoinDrawMode(); 
+            this.controleur.DesactivCoinDrawMode();
+            this.controleur.DesactivWallMode();
+            this.controleur.ActivPieceMode();
         });
         
         this.cbNiveaux = new ComboBox<>(); // Initialisation de ComboBox

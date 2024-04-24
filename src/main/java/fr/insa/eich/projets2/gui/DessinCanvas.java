@@ -65,6 +65,8 @@ public class DessinCanvas extends Pane{
         realCanvas = niveauxCanvas.get(niveau);
         realCanvas.setVisible(true);
     }
+    
+    
 
     
 }
