@@ -4,6 +4,7 @@
  */
 package fr.insa.eich.projets2;
 
+
 /**
  *
  * @author eicha
@@ -26,12 +27,13 @@ public class Mur {
         this.hauteur = hauteur;
     }
            
-    public double longueur(double xDeb,double xFin, double yDeb, double yFin){
+    public static double longueur(double xDeb,double xFin, double yDeb, double yFin){
+        double longueur=0; 
         if (xDeb == xFin){
-            longueur = yFin - yDeb;
+            longueur = Math.abs(yFin - yDeb); // pour mettre la valeur absolue de la longueur 
         }
         else if (yDeb == yFin){
-            longueur = xFin - xDeb;
+            longueur = Math.abs(xFin - xDeb); // pour mettre valeur absolue de la longueur 
         }
         return longueur;
     }

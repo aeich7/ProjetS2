@@ -14,7 +14,6 @@ public class Ouvertures {
     private int id; 
     private double dim_x;  // pour connaitre longueur d'un côté 
     private double dim_y;   //pour connaitre longueur de l'autre côté 
-    private double aire_ouvertures;  
 
     public Ouvertures(int id, double dim_x, double dim_y) {
         this.id = id;
@@ -22,15 +21,13 @@ public class Ouvertures {
         this.dim_y = dim_y;
     }
     
-     public Ouvertures aire (int id, int nombre_portes, int nombre_fenetres, double dim_x, double dim_y){
-         if (dim_x==1.20) {
-            this.aire_ouvertures = dim_x*dim_y*nombre_fenetres;
-         }
-         else if ((dim_x==0.90)||(dim_x==2.10)){
-             this.aire_ouvertures = dim_x*dim_y*nombre_portes;
-         }
-         return this;
+     public static double surface (int nombre_fenetres, int nombre_portes){
+         double aire_ouvertures=0; 
+         aire_ouvertures = aire_ouvertures + 1.20*1.20*nombre_fenetres;
+         aire_ouvertures = aire_ouvertures + 0.90*2.10*nombre_portes;
+         return aire_ouvertures;
      }
+     
      public String toString (double dim_x, double dim_y){
     if (dim_x ==1.20){
         return "fenêtre";
