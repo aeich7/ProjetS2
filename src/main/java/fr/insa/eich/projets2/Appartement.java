@@ -15,6 +15,7 @@ public class Appartement {
     private int numero;
     private List<Piece> ListePieces = new ArrayList<>();
     private double surfaceappartement;
+    public double surfaceTotaleRevetement;
     
     public Appartement( int etage,int numero){
         this.etage=etage;
@@ -31,6 +32,14 @@ public class Appartement {
         }
         return surfaceappartement;
             }
+     public double surfaceTotaleRevetement(){
+        surfaceTotaleRevetement=0;
+        for(Piece piece : ListePieces){
+         surfaceTotaleRevetement+=piece.SurfaceRevetement();   
+        }
+        return surfaceTotaleRevetement;
+            }
+
     
     public void AjouterPiece(Piece Piece1){
         ListePieces.add(Piece1);
