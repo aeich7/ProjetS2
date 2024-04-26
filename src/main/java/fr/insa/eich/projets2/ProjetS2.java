@@ -55,21 +55,33 @@ public class ProjetS2 {
         
         
         
-        // La partie avec l'attribution des valeurs est juste ici pour le test
-        double debutX, finX, finY, debutY; 
-        debutX = 1.20; 
-        finX= 5.60; 
-        debutY = 0;
-        finY=0;
-        // fin de la partie spécifique au test
+        // La partie avec l'attribution des valeurs est juste ici pour le test (c'est pour faire 4 murs)
+        double prix_total_piece=0; 
+        int i ;
+        int compteur_id=1;
+        for(i=0;i<4;i++){
+            double debutX, finX, finY, debutY; 
+            System.out.println("Donner debut x");
+            debutX = scanner.nextInt(); 
+            scanner.nextLine();
+            System.out.println("Donner fin x");
+            finX= scanner.nextInt(); 
+            scanner.nextLine();
+            System.out.println("Donner debut y");
+            debutY = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Donner fin y");
+            finY= scanner.nextInt(); 
+            scanner.nextLine();
+              // fin de la partie spécifique au test
         
         
         
         Double dim_inconnue; 
         dim_inconnue = longueur(debutX, finX, debutY, finY); 
-        System.out.println(" La longueur est de : "+ dim_inconnue);
+        System.out.println(" La longueur est de : "+ dim_inconnue+"m");
         double surface_mur_nu =dim_inconnue * hauteur; 
-        System.out.println(" La surface du mur sans revetement est de : "+surface_mur_nu); 
+        System.out.println(" La surface du mur sans revetement est de : "+surface_mur_nu+"m"); 
         System.out.println();
         
         
@@ -86,10 +98,10 @@ public class ProjetS2 {
         System.out.println();
         
         double dimension = surface(nbre_fenetres, nbre_portes);
-        System.out.println(" Ceci est la surface totale de toutes les ouvertures : " + dimension);
+        System.out.println(" Ceci est la surface totale de toutes les ouvertures : " + dimension+"m²");
                 
         Double dim_tot = surface_mur_nu - dimension; 
-        System.out.println("La surface totale pour y mettre du revêtements est : "+dim_tot);
+        System.out.println("La surface totale pour y mettre du revêtements est : "+dim_tot+"m²");
         System.out.println();
         
         // Tout ce qui est avant sert au calcul de la surface du mur où on applique du revêtement
@@ -100,24 +112,46 @@ public class ProjetS2 {
         System.out.println(" Voici les revêtements que vous pouvez utiliser pour les murs : ");
         afficherMatrice(results);
         System.out.println();
-        System.out.println(" Donnez l'identifiant de celui que vous voulez pour votre mur ");
+        System.out.println(" Donnez l'identifiant de celui que vous voulez pour votre mur "); // On demande a user de mettre chiffre correspondant a son revet
         int l=0;
         int valeur = Lire.i();
         while (Integer.parseInt(results[l][0])!=valeur){  // On lit l'id rentré par user et on cherche le prix à l'unite
                 l=l+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)
                  
         }
-        double prix_unitaire = Double.parseDouble(results[l][2]);
-        double prix_mur = dim_tot * prix_unitaire ; 
+        double prix_unitaire_mur = Double.parseDouble(results[l][2]); // methode pour convertir case du tableau en double 
+        double prix_mur = dim_tot * prix_unitaire_mur ; // pour avoir le prix total de ce mur
+        prix_total_piece=prix_total_piece+prix_mur;
         System.out.println(" Le prix du mur est de "+ prix_mur + "€");
+        Mur mur = new Mur(compteur_id,debutX,finX,debutY,finY,hauteur);
+        String ecrire = mur.toString()+ prix_mur;
+        System.out.println(ecrire);
+        compteur_id=compteur_id+1;
+        }
         
         String [][]results1 = sol(resultat); //création d'une matrice pour y mettre les revêtements qui peuvent aller avec sol
         // results prend la matrice resultat et n'écrit que les rvet utiles pour un sol 
         System.out.println();
          
-        /* System.out.println(" Voici les revêtements que vous pouvez utiliser pour les sols : ");
+        System.out.println(" Voici les revêtements que vous pouvez utiliser pour les sols : ");
         afficherMatrice(results1);
+        System.out.println();
+        System.out.println(" Donnez l'identifiant de celui que vous voulez pour votre sol "); // On demande a user de mettre chiffre correspondant a son revet
+        int m=0;
+        int valeur_sol = Lire.i();
+        while (Integer.parseInt(results1[m][0])!=valeur_sol){  // On lit l'id rentré par user et on cherche le prix à l'unite
+                m=m+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)        
+        }
+        double prix_unitaire_sol = Double.parseDouble(results[m][2]);
+        double cout_sol;
         
+        Sol sol =new Sol();
+        cout_sol = sol.calculSurface()*prix_unitaire_sol; // Ici le 3.2 et le 1.3 sont des exemples, il faut encore trouver un moyen de l'automatiser 
+        System.out.println(" Le cout du sol est de "+cout_sol+" €");
+        
+        System.out.println(" Le prix de la pièce est de "+prix_total_piece+" €");
+        
+        /*
          String [][]results2 = plafond(resultat); //création d'une matrice pour y mettre les revêtements qui peuvent aller avec plafond
         // results prend la matrice resultat et n'écrit que les rvet utiles pour un plafond
         System.out.println();

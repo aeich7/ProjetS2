@@ -18,7 +18,7 @@ public class Mur {
     private double hauteur;
     private double longueur;
     
-    public Mur(int id, double xDeb, double xFin, double yDeb, double yFin, int hauteur) {
+    public Mur(int id, double xDeb, double xFin, double yDeb, double yFin, double hauteur) {
         this.id = id;
         this.xDeb = xDeb;
         this.xFin = xFin;
@@ -53,5 +53,11 @@ public class Mur {
     public void setHauteur(double hauteur) {
         this.hauteur = hauteur;
     }
+
+ 
+    public static String toString(int id, double longueur) {
+        return "Mur{" + "id=" + id + ", longueur=" + longueur + '}';
+    }
+    
     
 }
