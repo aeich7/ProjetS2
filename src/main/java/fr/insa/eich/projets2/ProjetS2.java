@@ -46,7 +46,6 @@ public class ProjetS2 {
         // results prend la matrice resultat et n'écrit que les rvet utiles pour un mur 
         System.out.println();
         
-        // création d'un mur avec les coins ... (partie déjà faite par Orély1 dans sa branche github) 
         
         
         // Tout d'abord, on va calculer surface totale du mur sans les ouvertures 
@@ -59,6 +58,8 @@ public class ProjetS2 {
         double prix_total_piece=0; 
         int i ;
         int compteur_id=1;
+        Sol sol_appartement = new Sol(); 
+        Sol plafond = new Sol(); // comme ça se calcule comme un sol(pas d'ouvertures), on créé un sol pour faire la plafond
         for(i=0;i<4;i++){
             double debutX, finX, finY, debutY; 
             System.out.println("Donner debut x");
@@ -73,7 +74,11 @@ public class ProjetS2 {
             System.out.println("Donner fin y");
             finY= scanner.nextInt(); 
             scanner.nextLine();
-              // fin de la partie spécifique au test
+            Coin coin = new Coin(debutX, debutY); // petite astuce pour mettre que les coins de début comme ça on a bien exactement 4 coins (ça sert pour le calcul du sol et plafond)
+            sol_appartement.AjouterCoin(coin); // ici, on attribue chaque coin créé à notre sol pour calculer la surface
+            plafond.AjouterCoin(coin); // On attribue aussi les coins à notre plafond sinon ça marche pas 
+            System.out.println(coin.toString()); // On écrit les coins juste pour vérifier 
+              
         
         
         
@@ -81,7 +86,7 @@ public class ProjetS2 {
         dim_inconnue = longueur(debutX, finX, debutY, finY); 
         System.out.println(" La longueur est de : "+ dim_inconnue+"m");
         double surface_mur_nu =dim_inconnue * hauteur; 
-        System.out.println(" La surface du mur sans revetement est de : "+surface_mur_nu+"m"); 
+        System.out.println(" La surface du mur sans revetement est de : "+surface_mur_nu+"m²"); 
         System.out.println();
         
         
@@ -142,24 +147,35 @@ public class ProjetS2 {
         while (Integer.parseInt(results1[m][0])!=valeur_sol){  // On lit l'id rentré par user et on cherche le prix à l'unite
                 m=m+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)        
         }
-        double prix_unitaire_sol = Double.parseDouble(results[m][2]);
+        double prix_unitaire_sol = Double.parseDouble(results1[m][2]);
         double cout_sol;
         
-        Sol sol =new Sol();
-        cout_sol = sol.calculSurface()*prix_unitaire_sol; // Ici le 3.2 et le 1.3 sont des exemples, il faut encore trouver un moyen de l'automatiser 
+        cout_sol = sol_appartement.calculSurface()*prix_unitaire_sol;  
         System.out.println(" Le cout du sol est de "+cout_sol+" €");
         
-        System.out.println(" Le prix de la pièce est de "+prix_total_piece+" €");
+        prix_total_piece= prix_total_piece + cout_sol;
+        System.out.println(" Le prix de la pièce sans plafond est de "+prix_total_piece+" €"); // juste pour vérifier que ça marche 
         
-        /*
          String [][]results2 = plafond(resultat); //création d'une matrice pour y mettre les revêtements qui peuvent aller avec plafond
         // results prend la matrice resultat et n'écrit que les rvet utiles pour un plafond
         System.out.println();
          
         System.out.println(" Voici les revêtements que vous pouvez utiliser pour les plafonds : ");
         afficherMatrice(results2);
-        */
-        
+        System.out.println();
+        System.out.println("Donner l'identifiant de celui que vous voulez pour votre plafond ");
+        int n = 0;
+        int valeur_plafond = Lire.i();
+        while (Integer.parseInt(results2[n][0])!=valeur_plafond){  // On lit l'id rentré par user et on cherche le prix à l'unite
+                n=n+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)        
+        }
+        double prix_unitaire_plafond = Double.parseDouble(results2[n][2]);
+        double cout_plafond;
+        cout_plafond = plafond.calculSurface()*prix_unitaire_plafond; 
+        System.out.println("Le cout du plafond est de "+cout_plafond+" €");
+        prix_total_piece= prix_total_piece + cout_plafond; 
+        System.out.println();
+        System.out.println(" Le prix total de la pièce est de "+prix_total_piece+" €");
      
       
      }
