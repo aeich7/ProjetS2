@@ -1,6 +1,7 @@
 package fr.insa.eich.projets2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /*
@@ -13,8 +14,17 @@ import java.util.List;
  * @author arbre
  */
 public class Sol{
+   private static int idCompteur=0;
    private int id;
-   private List<Coin> Coins = new ArrayList<>();
+   private HashSet<Coin> Coins = new HashSet<>();
+
+
+    public Sol() {
+        idCompteur++;
+        this.id = idCompteur;
+    }
+   
+   
     
     public int getId() {
         return id;
@@ -56,6 +66,12 @@ public class Sol{
         double surface = longueur * largeur;
         return surface;
     }
+
+    public HashSet<Coin> getCoins() {
+        return Coins;
+    }
+    
+    
         
 }
 

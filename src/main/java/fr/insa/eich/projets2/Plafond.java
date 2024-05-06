@@ -2,6 +2,7 @@ package fr.insa.eich.projets2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -13,8 +14,16 @@ import java.util.List;
  * @author arbre
  */
 public class Plafond  {
+    private static int idCompteur=0;
     private int id ;
-    private List<Coin> Coins = new ArrayList<>();
+    private HashSet<Coin> Coins = new HashSet<>();
+
+    public Plafond() {
+        idCompteur++;
+        this.id = idCompteur;
+        
+    }
+    
     
     
     public int getId() {
@@ -55,6 +64,15 @@ public class Plafond  {
         double largeur = maxY - minY;
         double surface = longueur * largeur;
         return surface;
+    }
+
+    public HashSet<Coin> getCoins() {
+        return Coins;
+    }
+    
+    
+    public boolean equals(Plafond plafond) {
+        return (this.getCoins()== plafond.getCoins());
     }
    
      }

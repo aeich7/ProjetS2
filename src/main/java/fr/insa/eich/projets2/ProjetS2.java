@@ -70,7 +70,7 @@ public class ProjetS2 {
                 }                   
                 
             }
-                Mur mur = new Mur(debut, fin);
+                Mur mur = new Mur(debut, fin, 3.0);
                 piece.AjouterMur(mur);
         }
        piece.afficher();

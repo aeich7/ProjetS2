@@ -15,6 +15,8 @@ public class Piece {
     private Sol sol;
     private Plafond plafond;
     private List<Mur> Murs = new ArrayList<>();
+    private double centreX;
+    private double centreY;
 
     public Piece() {
         idCompteur++;
@@ -55,14 +57,28 @@ public class Piece {
         Murs.add(Mur);
     }
 
-    @Override
-    public String toString() {
-        return "Piece{" + "id=" + id + ", Murs=" + Murs + '}';
+    public double getCentreX() {
+        return centreX;
     }
 
+    public void setCentreX(double centreX) {
+        this.centreX = centreX;
+    }
+
+    public double getCentreY() {
+        return centreY;
+    }
+
+    public void setCentreY(double centreY) {
+        this.centreY = centreY;
+    }
     
     
-    
+
+    @Override
+    public String toString() {
+        return "Piece{" + "id=" + id + ", sol=" + sol + ", plafond=" + plafond + ", Murs=" + Murs + '}';
+    }
    
     public void afficher(){
         System.out.println("Piece numéro : "+this.getId());

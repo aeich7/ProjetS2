@@ -18,8 +18,16 @@ public class Niveau {
     private List<Coin> coins = new ArrayList<>();
     private List<Mur> murs = new ArrayList<>();
     private List<Appartement> ListeAppartements = new ArrayList<>();
+    private List<Piece> pieces = new ArrayList();
     
-    public List<Coin> getCoins() {
+    
+
+    public Niveau() {
+        idCompteur++;
+        this.id = idCompteur;
+    }
+    
+      public List<Coin> getCoins() {
         return coins;
     }
 
@@ -27,17 +35,9 @@ public class Niveau {
         return murs;
     }
     
-    public void afficher (int etage, double hauteurSousPlafond){
-        hauteurBatiment=etage*hauteurSousPlafond;
-        System.out.println("la hauteur du batiment est:"+hauteurBatiment);
+    public List<Piece> getPieces(){
+        return pieces;
     }
-
-    public Niveau() {
-        idCompteur++;
-        this.id = idCompteur;
-    }
-    
-    
     
     
     public void afficher(){
@@ -73,7 +73,10 @@ public class Niveau {
     public void addMur(Mur mur) {
         murs.add(mur);
     }
-
+    
+    public void addPiece(Piece piece){
+        pieces.add(piece);
+    }
     
     
 }

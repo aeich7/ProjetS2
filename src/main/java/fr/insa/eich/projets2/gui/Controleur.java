@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.eich.projets2.gui;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,17 +15,18 @@ import javafx.stage.Stage;
 import javafx.scene.control.Slider;
 import fr.insa.eich.projets2.*;
 import javafx.stage.Modality;
-import javafx.scene.input.*;
-import javafx.scene.paint.*;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 
 /**
  *
@@ -36,14 +36,15 @@ public class Controleur {
 ;
     private MainPane vue;
     private int etat;
+    private double hauteur;
     private boolean drawMode = false;
     private boolean wallMode = false;
     private boolean PieceMode = false;
     private Donnees<Batiment> dBatiment;
     private List<Coin> CoinsPourMur = new ArrayList<>();
-    private List<Coin> CoinsTot = new ArrayList();
-    private List<Mur> listeDesMurs = new ArrayList<>();
     private List<Mur> mursSelectionnes = new ArrayList<>();
+    private List<Mur> mursProches = new ArrayList<>();
+    
     
     public Controleur(MainPane vue){
         this.vue = vue;
@@ -107,6 +108,7 @@ public class Controleur {
         ceilingHeightInput.setPromptText("Entrez la hauteur sous plafond");
         GridPane.setConstraints(ceilingHeightInput, 1, 2);
 
+
         // Slider pour le nombre de niveaux
         Label levelsLabel = new Label("Nombre de niveaux:");
         GridPane.setConstraints(levelsLabel, 0, 3);
@@ -125,6 +127,8 @@ public class Controleur {
         Button submitButton = new Button("Soumettre");
         GridPane.setConstraints(submitButton, 1, 5);
         submitButton.setOnAction(e -> {
+        String hauteur = ceilingHeightInput.getText();
+        this.hauteur = Double.parseDouble(hauteur); 
         String selectedType = buildingTypeInput.getValue();
         Batiment batiment = new Batiment(selectedType);
         int nbNiveaux = (int) levelsSlider.getValue();
@@ -188,7 +192,7 @@ public class Controleur {
     
     public void ActivPieceMode() {
         PieceMode = true;
-        mursSelectionnes.clear(); // Réinitialiser les points à chaque activation du mode mur
+        mursSelectionnes.clear(); // Réinitialiser les murs à chaque activation du mode piece
     }
 
     public void DesactivPieceMode() {
@@ -210,7 +214,7 @@ public class Controleur {
                 ClicMur(event.getX(), event.getY());
             }
             else if (this.isPieceModeActive()) {
-                SelectionMur(event.getX(), event.getY());
+                CreerPiece(event.getX(), event.getY());
             }
         });
     }
@@ -225,11 +229,21 @@ public class Controleur {
         double alignedX = Math.round(x / gridSize) * gridSize;
         double alignedY = Math.round(y / gridSize) * gridSize;
         Coin Coin = new Coin(alignedX,alignedY);
-        niveauActuel.addCoin(Coin);
-        GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
-        gc.setFill(Color.BLACK); // Définit la couleur du point
-        gc.fillOval(alignedX - 2, alignedY - 2, 4, 4); // Dessine un petit cercle pour représenter le coin aligné
-    }
+        boolean test = true;
+        for (Coin CoinTest :dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins()){
+            if (CoinTest.equals(Coin))
+                test = false;
+        }
+        if (test == false){
+           System.out.println("Ce coin existe déjà !");
+        }
+        else{
+            niveauActuel.addCoin(Coin);
+            GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
+            gc.setFill(Color.BLACK); // Définit la couleur du point
+            gc.fillOval(alignedX - 2, alignedY - 2, 4, 4); // Dessine un petit cercle pour représenter le coin aligné
+        }
+        }
     
     public void updateNiveaux() { // Permet d'obtenir le nombre de niveau et ainsi créer le nombre de "plans" de niveau 
         this.vue.getCbNiveaux().getItems().clear();
@@ -277,64 +291,204 @@ public class Controleur {
                     System.out.println("Il n'y a pas de Coin à cet emplacement ! Veuillez le créer ou en sélectionnez un autre.");
                 }
     }
-
+    
     public void TracerMur(Coin deb, Coin fin) {
+        String selectedNiveau = this.vue.getCbNiveaux().getValue();
+        int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
+        Niveau niveauActuel = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex);
+
+        // Vérifier si le mur existe déjà
+        boolean murExiste = niveauActuel.getMurs().stream().anyMatch(mur -> 
+        (mur.getCoinDebut().equals(deb) && mur.getCoinFin().equals(fin)) ||
+        (mur.getCoinDebut().equals(fin) && mur.getCoinFin().equals(deb)));
+
+        if (!murExiste) {
+            GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
+            gc.setStroke(Color.RED);
+            gc.setLineWidth(2);
+            gc.strokeLine(deb.getX(), deb.getY(), fin.getX(), fin.getY());
+
+            Mur nouveauMur = new Mur(deb, fin, this.hauteur);
+            niveauActuel.addMur(nouveauMur);
+        } else {
+        System.out.println("Un mur entre ces deux coins existe déjà.");
+        }
+    }
+    
+    public void CreerPiece(double x, double y) { //Créer des pièces.
         // Récupérer la chaîne sélectionnée dans la ComboBox
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
         // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
         int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
         Niveau niveauActuel = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex);
-        GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
-        gc.setStroke(Color.RED); // Choisissez la couleur pour le mur
-        gc.setLineWidth(2); // Choisissez l'épaisseur du trait
-        gc.strokeLine(deb.getX(), deb.getY(), fin.getX(), fin.getY());
-        // Création d'un nouvel objet Mur et ajout à la liste
-        Mur nouveauMur = new Mur(deb, fin);
-        niveauActuel.addMur(nouveauMur);
-    }
-    
-    public void SelectionMur(double x, double y) {
-        // Récupérer la chaîne sélectionnée dans la ComboBox
-        String selectedNiveau = this.vue.getCbNiveaux().getValue();
-        // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
-        int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
         int gridSize = 30;  // Taille de la grille pour alignement
         double alignedX = Math.round(x / gridSize) * gridSize;
         double alignedY = Math.round(y / gridSize) * gridSize;
+        
+        List<Mur> choixMur = TrouverMur(dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs(),alignedX, alignedY);
+        Mur selectedMur = null;
+        if (choixMur.size() != 1) {
+            // Plusieurs murs proches ou aucun mur trouvé, nécessite une gestion supplémentaire
+            if (choixMur.size() > 1) {
+                // Implémenter ici un choix utilisateur (par exemple via une boîte de dialogue)
+                // Créer une alerte avec un type de confirmation
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sélection du mur");
+                alert.setHeaderText("Plusieurs murs détectés");
+                alert.setContentText("Choisissez un mur:");
 
-        Mur selectedMur = findMurAt(dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs(),alignedX, alignedY);
+                // Créer une ComboBox pour lister les murs
+                ComboBox<Mur> comboBox = new ComboBox<>();
+                comboBox.getItems().addAll(choixMur);
+                comboBox.setPrefWidth(250);  // Configure la largeur préférée
+                comboBox.setCellFactory(lv -> new ListCell<Mur>() {
+                @Override
+                protected void updateItem(Mur mur, boolean empty) {
+                    super.updateItem(mur, empty);
+                    if (empty || mur == null) {
+                        setText(null);
+                    } else {
+                        setText("Mur numéro : "+String.valueOf(mur.getId())); // Afficher seulement l'ID du mur
+                    }
+                }
+                });
+
+                comboBox.setButtonCell(new ListCell<Mur>() {
+                @Override
+                protected void updateItem(Mur mur, boolean empty) {
+                    super.updateItem(mur, empty);
+                    if (empty || mur == null) {
+                        setText(null);
+                    } else {
+                        setText("Mur numéro : "+String.valueOf(mur.getId())); // Afficher seulement l'ID du mur dans le bouton de la ComboBox
+                    }
+                }
+                });
+                
+                // Ajout d'un ChangeListener pour changer la couleur du mur sélectionné
+                comboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Mur>() {
+                @Override
+                public void changed(ObservableValue<? extends Mur> observable, Mur oldValue, Mur newValue) {
+                    if (newValue != null) {
+                        choixMultipleMurs(newValue); // Méthode pour mettre en évidence le mur actuellement sélectionné
+                    }
+                    redessiner(); // Méthode pour redessiner les murs
+                }
+            });
+                
+
+
+                // Définir le ComboBox comme contenu supplémentaire de l'alerte
+                alert.getDialogPane().setContent(comboBox);
+
+                // Afficher la boîte de dialogue et attendre la réponse de l'utilisateur
+                alert.showAndWait();
+
+                // Retourner le mur sélectionné, ou null si aucun n'est choisi
+                   selectedMur = comboBox.getSelectionModel().getSelectedItem();
+            }
+        } else {
+            selectedMur = choixMur.get(0); // Un seul mur trouvé, sélection automatique
+        }
+        
+        //Mur selectedMur = TrouverMur(dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs(),alignedX, alignedY);
         if (selectedMur != null && !mursSelectionnes.contains(selectedMur)) {
             mursSelectionnes.add(selectedMur);
-            highlightMur(selectedMur);  // Méthode pour visualiser la sélection
+            selectionMur(selectedMur);  // Méthode pour visualiser la sélection
             System.out.println("Mur sélectionné ajouté.");
 
         if (mursSelectionnes.size() == 4) {
+            if (verifierClos(mursSelectionnes)) {
             Piece piece = new Piece();// Créer une pièce après la sélection de 4 murs
             for (Mur mur : mursSelectionnes){
                 piece.AjouterMur(mur);
             }
+            Sol Sol = new Sol(); //Création du Sol
+            Plafond Plafond = new Plafond(); //Création du Plafond
+            for (Mur mur : mursSelectionnes){ // Ajout des coins dans le HashSet de chacun (garantissant l'unicité)
+                Sol.AjouterCoin(mur.getCoinDebut());
+                Sol.AjouterCoin(mur.getCoinFin());
+                Plafond.AjouterCoin(mur.getCoinDebut());
+                Plafond.AjouterCoin(mur.getCoinFin());
+            }
+            double sommeX = 0;
+            double sommeY = 0;
+            for (Coin Coin : Sol.getCoins()){
+                sommeX = sommeX + Coin.getX();
+                sommeY = sommeY + Coin.getY();
+            }
+            piece.setCentreX(sommeX/(double)Sol.getCoins().size());
+            piece.setCentreY(sommeY/(double)Sol.getCoins().size());
+            piece.setPlafond(Plafond);
+            piece.setSol(Sol);
+            niveauActuel.addPiece(piece);
             mursSelectionnes.clear();// Nettoyer la liste après la création de la pièce
-            //System.out.println(piece.toString()); Ligne de test !
+            System.out.println(piece.toString()); 
             redessiner(); // Redessine les murs sans surlignage 
-        }
-    } else {
-        System.out.println(selectedMur == null ? "Aucun mur trouvé à cette position." : "Mur déjà sélectionné.");
+        } else {
+                System.out.println("Les murs sélectionnés ne forment pas un espace clos.");
+                mursSelectionnes.clear();
+                redessiner(); 
+            }
+    } 
     }
+        else {
+        System.out.println(selectedMur == null ? "Aucun mur trouvé à cette position." : "Mur déjà sélectionné.");
 }
-    private Mur findMurAt(List<Mur> Mur,double x, double y) {
-    final double PROXIMITY_THRESHOLD = 5.0; // Seuil de proximité en pixels
+    }
+    private boolean verifierClos(List<Mur> murs) {
+    // Assurez-vous que les murs sont connectés de manière séquentielle pour former un cycle fermé
+    if (murs.size() < 4) return false;  // Assure qu'il y a assez de murs pour former un cycle fermé.
+
+    for (int i = 0; i < murs.size(); i++) {
+        Mur current = murs.get(i);
+        Mur next = murs.get((i + 1) % murs.size());
+
+        // Vérifie toutes les connexions possibles pour un cycle fermé.
+        boolean isCorrectlyConnected =
+            current.getCoinFin().equals(next.getCoinDebut()) ||
+            current.getCoinFin().equals(next.getCoinFin()) ||
+            current.getCoinDebut().equals(next.getCoinDebut()) ||
+            current.getCoinDebut().equals(next.getCoinFin());
+
+        if (!isCorrectlyConnected) {
+            System.out.println("Echec de connexion entre : " + current + " et " + next);
+            return false;  // Si une connexion n'est pas correcte, retourne faux.
+        }
+    }
+    return true;  // Si toutes les connexions sont valides, retourne vrai.
+}
+    
+    
+    private List TrouverMur(List<Mur> Mur,double x, double y) { // Savoir si un ou plusieurs murs est à proximité du clic (pour la sélection)
+    final double PROXIMITY_THRESHOLD = 1.0; // Seuil de proximité en pixels
+    mursProches.clear();
     for (Mur mur : Mur) {
         if (mur.isNear(x, y, PROXIMITY_THRESHOLD)) {
-            return mur;
+            mursProches.add(mur);
         }
     }
-    return null;
+    return mursProches;
 }
-    public void highlightMur(Mur mur) { // Pour afficher la sélection
+
+    
+    public void selectionMur(Mur mur) { // Pour afficher la sélection
         GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
-        gc.setStroke(Color.BLUE);  // Couleur pour le mur sélectionné
+        gc.setStroke(Color.YELLOW);  // Couleur pour le mur sélectionné
         gc.setLineWidth(3);
         gc.strokeLine(mur.getCoinDebut().getX(), mur.getCoinDebut().getY(), mur.getCoinFin().getX(), mur.getCoinFin().getY());
+    }
+    
+    public void choixMultipleMurs(Mur mur) { // Pour afficher la sélection
+        Platform.runLater(() -> {
+        GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
+        // Effacer les dessins précédents ou redessiner l'arrière-plan si nécessaire
+        gc.clearRect(0, 0, vue.getcDessin().getRealCanvas().getWidth(), vue.getcDessin().getRealCanvas().getHeight());
+        redessiner();  // Redessiner tous les murs avant de surligner
+        gc.setStroke(Color.GREEN);  // Couleur pour le mur sélectionné
+        gc.setLineWidth(3);
+        gc.strokeLine(mur.getCoinDebut().getX(), mur.getCoinDebut().getY(), mur.getCoinFin().getX(), mur.getCoinFin().getY());
+    });
     }
     
     public void redessiner() {
@@ -348,6 +502,8 @@ public class Controleur {
         gc.fillRect(0, 0, vue.getcDessin().getRealCanvas().getWidth(), vue.getcDessin().getRealCanvas().getHeight()); // Applique un fond blanc
         List<Mur> ListeMurs = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs();
         List<Coin> ListeCoins = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins();
+        List<Mur> ListeMursSelectionnes = mursSelectionnes;
+        List<Piece> ListePieces = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getPieces();
         for (Mur mur : ListeMurs) {
             gc.setStroke(Color.RED);
             gc.setLineWidth(2);
@@ -357,6 +513,18 @@ public class Controleur {
             gc.setFill(Color.BLACK);
             gc.fillOval(coin.getX() - 2, coin.getY() - 2, 4, 4);
         }
+        for (Mur mur : ListeMursSelectionnes){
+            gc.setStroke(Color.YELLOW);
+            gc.setLineWidth(2);
+            gc.strokeLine(mur.getCoinDebut().getX(), mur.getCoinDebut().getY(), mur.getCoinFin().getX(), mur.getCoinFin().getY());
+        }
+        // Afficher le numéro de la pièce au centre de chaque pièce
+        gc.setFill(Color.BLUE);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+            for (Piece piece : ListePieces) {
+              gc.fillText("Pièce numéro " + piece.getId(), piece.getCentreX(), piece.getCentreY());
+    }
     }
     
     

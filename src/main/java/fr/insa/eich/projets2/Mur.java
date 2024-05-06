@@ -15,13 +15,16 @@ public class Mur {
     private Coin coinFin;
     private double hauteur;
     private double longueur;
+    private int nbPortes;
+    private int nbFenetres;
    
 
-    public Mur(Coin coinDebut, Coin coinFin) {
+    public Mur(Coin coinDebut, Coin coinFin, double hauteur) {
         compteurId++;
         this.id = compteurId;
         this.coinDebut = coinDebut;
         this.coinFin = coinFin;
+        this.hauteur = hauteur;
     }
            
     public  double longueur(){
