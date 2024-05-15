@@ -12,6 +12,7 @@ import java.util.*;
 public class Piece {
     private static int idCompteur = 0;
     private int id;
+    private int idAppartement = 0; //On initialise cette variable à zéro pur gérer l'afficahge de la pièce qui n'a pas encore été attribuée à un appartement
     private Sol sol;
     private Plafond plafond;
     private List<Mur> Murs = new ArrayList<>();
@@ -72,6 +73,15 @@ public class Piece {
     public void setCentreY(double centreY) {
         this.centreY = centreY;
     }
+
+    public void setIdAppartement(int idAppartement) {
+        this.idAppartement = idAppartement;
+    }
+
+    public int getIdAppartement() {
+        return idAppartement;
+    }
+    
     
     
 
@@ -87,5 +97,6 @@ public class Piece {
         }
     
     }
+    
 }  
     

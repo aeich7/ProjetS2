@@ -7,8 +7,6 @@ package fr.insa.eich.projets2.gui;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -19,7 +17,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        
         var scene = new Scene(new MainPane(),800,600);
         stage.setScene(scene);
         stage.show();

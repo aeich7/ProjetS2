@@ -24,7 +24,11 @@ public class Coin  {
     public int getId() {
         return id;
     }
-
+    
+     public static int getIdCompteur() {
+        return idCompteur;
+    }
+     
     public void setId(int id) {
         this.id = id;
     }
@@ -57,6 +61,13 @@ public class Coin  {
         }
         return null;
     }
+
+    public static void setIdCompteur(int idCompteur) {
+        Coin.idCompteur = idCompteur;
+    }
+   
+   
+   
 }
 
 

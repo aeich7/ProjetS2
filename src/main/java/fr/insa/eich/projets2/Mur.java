@@ -17,6 +17,7 @@ public class Mur {
     private double longueur;
     private int nbPortes;
     private int nbFenetres;
+     private Revetements revetement;
    
 
     public Mur(Coin coinDebut, Coin coinFin, double hauteur) {
@@ -85,10 +86,10 @@ public class Mur {
         return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut + ", coinFin=" + coinFin + ", hauteur=" + hauteur + ", longueur=" + longueur + '}';
     }
     
-  public double calculSurface(int nbPortes, int nbFenetres){
-        double surfaceTotale = this.longueur()*hauteur; // Assumons que cette méthode renvoie la surface totale de la pièce.
-        double surfacePortes = nbPortes * 0.90 * 2.10; // Surface totale occupée par les portes.
-        double surfaceFenetres = nbFenetres * 1.20 * 1.20; // Surface totale occupée par les fenêtres.
+  public double calculSurface(){
+        double surfaceTotale = this.longueur()*this.hauteur; // Assumons que cette méthode renvoie la surface totale de la pièce.
+        double surfacePortes = this.nbPortes * 0.90 * 2.10; // Surface totale occupée par les portes.
+        double surfaceFenetres = this.nbFenetres * 1.20 * 1.20; // Surface totale occupée par les fenêtres.
         return surfaceTotale - (surfacePortes + surfaceFenetres);
 }
   

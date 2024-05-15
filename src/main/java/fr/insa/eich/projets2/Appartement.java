@@ -4,6 +4,7 @@
  */
 package fr.insa.eich.projets2;
 import java.util.*;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -15,11 +16,14 @@ public class Appartement {
     private int niveau;
     private List<Piece> ListePieces = new ArrayList<>();
     private double surfaceAppartement;
+    private Color color;
+
     
     public Appartement(int niveau){
         idCompteur++;
         this.id = idCompteur;
         this.niveau =niveau;
+        this.color = generateRandomColor();
     }
     public double surfaceAppartementAuSol(){
         surfaceAppartement=0;
@@ -36,9 +40,6 @@ public class Appartement {
     public List<Piece> getListePieces() {
         return ListePieces;
     }
-    public void ajouterPiece(Piece piece){
-        ListePieces.add(piece);
-    }
     
     public int getId() {
         return id;
@@ -46,12 +47,26 @@ public class Appartement {
     public void setId(int id) {
         this.id = id;
     }
+    
+    // Méthode pour générer une couleur aléatoire associée à l'appartement
+    private Color generateRandomColor() {
+        Random rand = new Random();
+        return Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+    }
+
+    public Color getColor() {
+        return color;
+    }
+    
+    
 
     @Override
     public String toString() {
         return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", ListePieces=" + ListePieces + ", surfaceAppartement=" + surfaceAppartement + '}';
     }
     
-    
+    public String toComboBox(){ // Pour l'affichage dans le ComboBox
+        return "Appartement "+id;
+    }
     
 }

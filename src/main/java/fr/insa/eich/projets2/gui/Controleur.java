@@ -27,6 +27,9 @@ import javafx.scene.control.ListCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.application.Platform;
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.Node;
 
 /**
  *
@@ -40,10 +43,12 @@ public class Controleur {
     private boolean drawMode = false;
     private boolean wallMode = false;
     private boolean PieceMode = false;
+    private boolean AppartementMode = false;
     private Donnees<Batiment> dBatiment;
     private List<Coin> CoinsPourMur = new ArrayList<>();
     private List<Mur> mursSelectionnes = new ArrayList<>();
     private List<Mur> mursProches = new ArrayList<>();
+    private int gridSize = 30;
     
     
     public Controleur(MainPane vue){
@@ -56,10 +61,15 @@ public class Controleur {
         if (NouvelEtat == 0){
             this.vue.getVbDroit().setManaged(false);
             this.vue.getVbDroit().setVisible(false);
+            this.vue.getSaveItem().setDisable(true);
         }
         if (NouvelEtat == 10){
             this.vue.getVbDroit().setManaged(true);
             this.vue.getVbDroit().setVisible(true);
+            this.vue.getSaveItem().setDisable(false);
+        }
+        if (NouvelEtat == 20){
+            
         }
     }
     public void NouveauProjet() {
@@ -136,6 +146,8 @@ public class Controleur {
         int AppartParNiveau = 0; // Variable pour stocker le nombre d'appartements par niveau
             if ("Immeuble".equals(selectedType) && !apartmentsPerLevelInput.getText().isEmpty()) {
                 AppartParNiveau = Integer.parseInt(apartmentsPerLevelInput.getText());
+                this.vue.getRbAppartement().setVisible(true); //Affiche les boutons pour les Appartements
+                this.vue.getChoixAppart().setVisible(true);
             }
 
             for (int j = 0; j < nbNiveaux; j++) { // Création des niveaux nécessaires suivant NbNiveaux
@@ -145,9 +157,12 @@ public class Controleur {
                     for (int k = 1; k<=AppartParNiveau; k++){
                         Appartement appartement = new Appartement(j);
                         batiment.getListeNiveaux().get(j).AjouterAppartement(appartement);
-                    }   
+                    }
                 }
             }
+            Platform.runLater(() -> {
+            updateChoixAppart(0);
+            });
            //System.out.println(batiment.toString()); Ligne de test
            this.dBatiment = new Donnees();
            this.dBatiment.setCurrentData(batiment);
@@ -163,6 +178,7 @@ public class Controleur {
         newWindow.setTitle("Nouveau Projet");
         newWindow.setScene(secondScene);
         newWindow.show();
+        
     }
     
     public void ActivCoinDrawMode() { // Activer le mode de Dessin des coins
@@ -203,6 +219,19 @@ public class Controleur {
         return PieceMode;
     }
     
+    public boolean isAppartementModeActive(){
+        return AppartementMode;
+    }
+    
+    public void ActiveAppartementMode(){
+        AppartementMode = true;
+    }
+    
+    public void DesactivAppartementMode(){
+        AppartementMode = false;
+    }
+    
+    
       
     private void attachMouseEvents() {
         Canvas canvas = vue.getcDessin().getRealCanvas();
@@ -212,22 +241,25 @@ public class Controleur {
             }
             else if (this.isWallModeActive()) {
                 ClicMur(event.getX(), event.getY());
+                redessiner(); // Afficher un coin sélectionné en rouge
             }
             else if (this.isPieceModeActive()) {
                 CreerPiece(event.getX(), event.getY());
+            }
+            else if(this.isAppartementModeActive()){
+                AjoutAppartement(event.getX(),event.getY());
             }
         });
     }
     
     public void ClicCoin(double x, double y) {
-        int gridSize = 30; // La taille de la grille pour l'alignement
         // Récupérer la chaîne sélectionnée dans la ComboBox
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
         // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
         int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
         Niveau niveauActuel = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex);
-        double alignedX = Math.round(x / gridSize) * gridSize;
-        double alignedY = Math.round(y / gridSize) * gridSize;
+        double alignedX = Math.round(x / this.gridSize) * this.gridSize;
+        double alignedY = Math.round(y / this.gridSize) * this.gridSize;
         Coin Coin = new Coin(alignedX,alignedY);
         boolean test = true;
         for (Coin CoinTest :dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins()){
@@ -236,6 +268,9 @@ public class Controleur {
         }
         if (test == false){
            System.out.println("Ce coin existe déjà !");
+           int nvCompt = Coin.getIdCompteur() -1;
+           Coin.setIdCompteur(nvCompt);
+           
         }
         else{
             niveauActuel.addCoin(Coin);
@@ -256,22 +291,49 @@ public class Controleur {
                 setupNiveauSelection();
             }
     }
+    
+    public void updateChoixAppart(int indexNiveau) { // Pouvoir choisir la Liste dans le ComboBox des appartements
+        this.vue.getChoixAppart().getItems().clear();
+        List<Appartement> appartements = this.dBatiment.getCurrentData().getListeNiveaux().get(indexNiveau).getListeAppartement();
+        for (Appartement appartement : appartements){
+            HBox hBox = new HBox(5); // 5 est l'espacement
+            Rectangle rect = new Rectangle(10, 10); //Taille du rectangle
+            rect.setFill(appartement.getColor()); // Couleur du rectangle
+            Label label = new Label(appartement.toComboBox());
+            hBox.getChildren().addAll(rect, label);
+            //this.vue.getChoixAppart().getItems().add(appartement.toComboBox());
+            this.vue.getChoixAppart().getItems().add(hBox);
+        }
+        
+}
     public void setupNiveauSelection() { // Permet d'effectuer les différentes actions sur le niveau sélectionné
         vue.getCbNiveaux().setOnAction(event -> {
         String selectedNiveau = vue.getCbNiveaux().getValue();
         int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
         vue.getcDessin().selectNiveau(niveauIndex);
         attachMouseEvents(); 
-    });
-}
+        
+        // Vérifie si le type de bâtiment actuel est un immeuble
+        boolean isImmeuble = this.dBatiment.getCurrentData().getType().equals("Immeuble");
+        if (isImmeuble) {
+            // Mettre à jour et afficher la ComboBox des appartements si c'est un immeuble
+            updateChoixAppart(niveauIndex);
+            this.vue.getChoixAppart().setVisible(true); // Rendre visible la ComboBox
+        } else {
+            // Sinon, masquer la ComboBox des appartements
+            this.vue.getChoixAppart().setVisible(false);
+            this.vue.getRbAppartement().setVisible(false);
+        }
+        });
+    }
+
     public void ClicMur(double x, double y) {
         // Récupérer la chaîne sélectionnée dans la ComboBox
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
         // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
         int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
-        int gridSize = 30;
-        double alignedX = Math.round(x / gridSize) * gridSize;
-        double alignedY = Math.round(y / gridSize) * gridSize;
+        double alignedX = Math.round(x / this.gridSize) * gridSize;
+        double alignedY = Math.round(y / this.gridSize) * gridSize;
 
         Coin clickedCoin = Coin.findCoinAt(dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins(), alignedX, alignedY);
             if (clickedCoin != null) {
@@ -320,10 +382,9 @@ public class Controleur {
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
         // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
         int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
-        Niveau niveauActuel = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex);
-        int gridSize = 30;  // Taille de la grille pour alignement
-        double alignedX = Math.round(x / gridSize) * gridSize;
-        double alignedY = Math.round(y / gridSize) * gridSize;
+        Niveau niveauActuel = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex);  
+        double alignedX = Math.round(x / this.gridSize) * this.gridSize;
+        double alignedY = Math.round(y / this.gridSize) * this.gridSize;
         
         List<Mur> choixMur = TrouverMur(dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs(),alignedX, alignedY);
         Mur selectedMur = null;
@@ -397,55 +458,76 @@ public class Controleur {
             selectionMur(selectedMur);  // Méthode pour visualiser la sélection
             System.out.println("Mur sélectionné ajouté.");
 
-        if (mursSelectionnes.size() == 4) {
-            if (verifierClos(mursSelectionnes)) {
-            Piece piece = new Piece();// Créer une pièce après la sélection de 4 murs
-            for (Mur mur : mursSelectionnes){
-                piece.AjouterMur(mur);
+        if (mursSelectionnes.size() == 4) { //Vérifie si quatre murs ont bien été sélectionnés
+            if (verifierClos(mursSelectionnes)) { //Appel de la méthode qui permet de vérifier si l'espace est clos.
+                if (isPieceUnique(niveauActuel.getPieces(), mursSelectionnes)) {
+                    Piece piece = new Piece();// Créer une pièce après la sélection de 4 murs
+                    for (Mur mur : mursSelectionnes){
+                    piece.AjouterMur(mur);
+                    }
+                    Sol Sol = new Sol(); //Création du Sol
+                    Plafond Plafond = new Plafond(); //Création du Plafond
+                    for (Mur mur : mursSelectionnes){ // Ajout des coins dans le HashSet de chacun (garantissant l'unicité)
+                    Sol.AjouterCoin(mur.getCoinDebut());
+                    Sol.AjouterCoin(mur.getCoinFin());
+                    Plafond.AjouterCoin(mur.getCoinDebut());
+                    Plafond.AjouterCoin(mur.getCoinFin());
+                    }
+                    double sommeX = 0;
+                    double sommeY = 0;
+                    for (Coin Coin : Sol.getCoins()){
+                        sommeX = sommeX + Coin.getX();
+                        sommeY = sommeY + Coin.getY();
+                    }
+                    piece.setCentreX(sommeX/(double)Sol.getCoins().size());
+                    piece.setCentreY(sommeY/(double)Sol.getCoins().size());
+                    piece.setPlafond(Plafond);
+                    piece.setSol(Sol);
+                    niveauActuel.addPiece(piece);
+                    mursSelectionnes.clear();// Nettoyer la liste après la création de la pièce
+                    System.out.println(piece.toString()); 
+                    redessiner(); // Redessine les murs sans surlignage 
+                } else {
+                    System.out.println("Une pièce identique existe déjà.");
+                    mursSelectionnes.clear();
+                    redessiner();
             }
-            Sol Sol = new Sol(); //Création du Sol
-            Plafond Plafond = new Plafond(); //Création du Plafond
-            for (Mur mur : mursSelectionnes){ // Ajout des coins dans le HashSet de chacun (garantissant l'unicité)
-                Sol.AjouterCoin(mur.getCoinDebut());
-                Sol.AjouterCoin(mur.getCoinFin());
-                Plafond.AjouterCoin(mur.getCoinDebut());
-                Plafond.AjouterCoin(mur.getCoinFin());
-            }
-            double sommeX = 0;
-            double sommeY = 0;
-            for (Coin Coin : Sol.getCoins()){
-                sommeX = sommeX + Coin.getX();
-                sommeY = sommeY + Coin.getY();
-            }
-            piece.setCentreX(sommeX/(double)Sol.getCoins().size());
-            piece.setCentreY(sommeY/(double)Sol.getCoins().size());
-            piece.setPlafond(Plafond);
-            piece.setSol(Sol);
-            niveauActuel.addPiece(piece);
-            mursSelectionnes.clear();// Nettoyer la liste après la création de la pièce
-            System.out.println(piece.toString()); 
-            redessiner(); // Redessine les murs sans surlignage 
         } else {
                 System.out.println("Les murs sélectionnés ne forment pas un espace clos.");
                 mursSelectionnes.clear();
                 redessiner(); 
             }
-    } 
+        } 
+        }
+        else{
+            if (selectedMur == null){
+                System.out.println("Pas de mur existant à cet endroit !");
+            }
+            else {
+                System.out.println("Mur déjà sélectionné !");
+            } 
+        }
     }
-        else {
-        System.out.println(selectedMur == null ? "Aucun mur trouvé à cette position." : "Mur déjà sélectionné.");
+    
+    public boolean isPieceUnique(List<Piece> piecesExistantes, List<Mur> mursNouvellePiece) { // Verifier si La pièce existe déjà dans une liste
+    for (Piece pieceExistante : piecesExistantes) {
+        List<Mur> mursExistants = pieceExistante.getListeMurs();
+        if (mursExistants.containsAll(mursNouvellePiece) && mursNouvellePiece.containsAll(mursExistants)) {
+            return false; // La pièce existe déjà
+        }
+    }
+    return true; // Aucune pièce correspondante trouvée, donc elle est unique
 }
-    }
     private boolean verifierClos(List<Mur> murs) {
-    // Assurez-vous que les murs sont connectés de manière séquentielle pour former un cycle fermé
+    // Permet d'assurer que les murs sont connectés de manière à former un espace clos
     if (murs.size() < 4) return false;  // Assure qu'il y a assez de murs pour former un cycle fermé.
 
-    for (int i = 0; i < murs.size(); i++) {
-        Mur current = murs.get(i);
+    for (int i = 0; i < murs.size(); i++) { //Initialisation de la comparaison
+        Mur current = murs.get(i); 
         Mur next = murs.get((i + 1) % murs.size());
 
         // Vérifie toutes les connexions possibles pour un cycle fermé.
-        boolean isCorrectlyConnected =
+        boolean isCorrectlyConnected = //Méthode pour vérifier si un CoinFin ou CoinDébut est bien le même que le CoinFin ou CoinDébut du Mur d'après en testant toutes les posibilités.
             current.getCoinFin().equals(next.getCoinDebut()) ||
             current.getCoinFin().equals(next.getCoinFin()) ||
             current.getCoinDebut().equals(next.getCoinDebut()) ||
@@ -469,7 +551,7 @@ public class Controleur {
         }
     }
     return mursProches;
-}
+    }
 
     
     public void selectionMur(Mur mur) { // Pour afficher la sélection
@@ -491,6 +573,90 @@ public class Controleur {
     });
     }
     
+    public void AjoutAppartement(double x, double y){
+        Piece PieceProche = null;
+        double minDistance = Double.MAX_VALUE; // Intialisation d'un max qui sera mis à jour à chaque fois
+        //String selectedAppart = this.vue.getChoixAppart().getValue();
+        
+        // Récupérer l'élément sélectionné dans le ComboBox
+        HBox selectedHBox = this.vue.getChoixAppart().getValue();
+        
+        if (selectedHBox == null) {
+            System.out.println("Pas d'apprtement sélectionné !");
+            return;
+        }
+
+        // Extraire le label de l'HBox pour obtenir le texte
+        Label label = null;
+        for (Node node : selectedHBox.getChildren()) {
+            if (node instanceof Label) {
+                label = (Label) node;
+                break;
+            }
+        }
+    
+        String selectedAppart = label.getText();
+        
+        int NumAppart = Integer.parseInt(selectedAppart.replace("Appartement ", ""));
+        int PosAppartDansListe = 0;
+        // Récupérer la chaîne sélectionnée dans la ComboBox
+        String selectedNiveau = this.vue.getCbNiveaux().getValue();
+        // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
+        int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
+        if (niveauIndex == 0){ // Si on se situe au niveau 0, il suffit de faire NumAppart - 1 pour avoir sa position dans la liste d'appartement/niveau
+            PosAppartDansListe = NumAppart - 1;
+        }
+        else{ //Sinon, pour tous les autres niveaux, il faudra soustraire l'idMax des appartements du niveau précédent puis soustraire 1 our retrouver sa position dans la liste.
+            int idMax = 0;
+            for (Appartement Appart : this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex - 1).getListeAppartement()){
+                if (Appart.getId()> idMax){
+                    idMax = Appart.getId();
+                }
+            }
+            PosAppartDansListe = NumAppart - idMax - 1;
+        }
+        for (Piece piece : this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getPieces()) {
+            double distance = Math.sqrt(Math.pow(x - piece.getCentreX(), 2) + Math.pow(y - piece.getCentreY(), 2)); // Distance du clic par rapport au centre de la pièce
+            if (distance < minDistance) {  
+                minDistance = distance;
+                PieceProche = piece;
+            }
+        }
+        if (minDistance < 100) { // Définir un seuil approprié pour le "clic proche"
+            PieceProche.setIdAppartement(NumAppart); //Associe l'id de l'appart à la pièce
+            List<Piece> Compar = this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).getListePieces();
+            boolean estDejaDansAppart = false;
+            for (Piece piece : Compar){
+                if (PieceProche == piece){
+                    estDejaDansAppart= true;
+                }
+            }
+            List<Appartement> Compar2 = this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement();
+            boolean estDansAutreAppart = false;
+            for (Appartement appart : Compar2){
+                List<Piece> AutresApparts = appart.getListePieces();
+                for (Piece piece2 : AutresApparts){
+                    if (PieceProche == piece2){
+                    estDansAutreAppart = true;
+                    }
+                }
+            }
+            if (estDejaDansAppart == true){
+                System.out.println("Cette pièce est déjà dans l'appartement !");
+            }
+            else if(estDansAutreAppart == true){
+                System.out.println("Cette pièce est déjà dans un autre appartement !");
+            }
+            else {
+                this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).AjouterPiece(PieceProche); //Ajoute la pièce dans l'appartement
+                System.out.println("Pièce numéro "+ PieceProche.getId()+" ajoutée à l'appartement numéro : "+ this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).getId()+" !" );
+                System.out.println(this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).toString());
+            }
+            redessiner();
+        }
+        updateChoixAppart(niveauIndex); //A voir si on laisse ça ici ?? Car ça réinitiliasie la sélection...  
+    }
+    
     public void redessiner() {
         // Récupérer la chaîne sélectionnée dans la ComboBox
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
@@ -504,6 +670,8 @@ public class Controleur {
         List<Coin> ListeCoins = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins();
         List<Mur> ListeMursSelectionnes = mursSelectionnes;
         List<Piece> ListePieces = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getPieces();
+        List<Coin> ListeCoinsPourMur = CoinsPourMur;
+        List<Appartement> ListeAppartements = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement();
         for (Mur mur : ListeMurs) {
             gc.setStroke(Color.RED);
             gc.setLineWidth(2);
@@ -513,22 +681,43 @@ public class Controleur {
             gc.setFill(Color.BLACK);
             gc.fillOval(coin.getX() - 2, coin.getY() - 2, 4, 4);
         }
+        for (Coin coin : ListeCoinsPourMur){
+            gc.setFill(Color.RED);
+            gc.fillOval(coin.getX() - 2, coin.getY() - 2, 4, 4);
+        }
         for (Mur mur : ListeMursSelectionnes){
             gc.setStroke(Color.YELLOW);
             gc.setLineWidth(2);
             gc.strokeLine(mur.getCoinDebut().getX(), mur.getCoinDebut().getY(), mur.getCoinFin().getX(), mur.getCoinFin().getY());
         }
         // Afficher le numéro de la pièce au centre de chaque pièce
-        gc.setFill(Color.BLUE);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
-            for (Piece piece : ListePieces) {
-              gc.fillText("Pièce numéro " + piece.getId(), piece.getCentreX(), piece.getCentreY());
-    }
-    }
-    
+        for (Piece piece : ListePieces) {
+            if (piece.getIdAppartement() == 0){ // Si la pièce n'a pas encore été attribuée à un appart (idAppart = 0) alors afficher le nom de la pièce en noir
+                gc.setFill(Color.BLACK);
+                gc.fillText("Pièce numéro " + piece.getId(), piece.getCentreX(), piece.getCentreY());
+                 //Sinon récupérer la couleur de l'appart pour l'affichage
+                 } else {
+        for (Appartement appart : ListeAppartements) {
+            for (Piece pieceAppart : appart.getListePieces()) {
+                    gc.setFill(appart.getColor());
+                    gc.fillText("Pièce numéro " + pieceAppart.getId(), pieceAppart.getCentreX(), pieceAppart.getCentreY());
+                }
+            }
+
+        }
+   }
     
 }
+    }
+                
+               
+                
+    
+    
+    
+
 
 
     

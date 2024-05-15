@@ -17,6 +17,7 @@ public class Plafond  {
     private static int idCompteur=0;
     private int id ;
     private HashSet<Coin> Coins = new HashSet<>();
+     private Revetements revetement;
 
     public Plafond() {
         idCompteur++;
