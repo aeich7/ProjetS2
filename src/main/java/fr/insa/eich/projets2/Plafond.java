@@ -17,7 +17,7 @@ public class Plafond  {
     private static int idCompteur=0;
     private int id ;
     private HashSet<Coin> Coins = new HashSet<>();
-     private Revetements revetement;
+    private int IdRevetement;
 
     public Plafond() {
         idCompteur++;
@@ -76,4 +76,30 @@ public class Plafond  {
         return (this.getCoins()== plafond.getCoins());
     }
    
-     }
+    public int getIdRevetement() {
+        return IdRevetement;
+    }
+
+    public void setIdRevetement(int IdRevetement) {
+        this.IdRevetement = IdRevetement;
+    }
+
+    @Override
+    public String toString() {
+        String coinsIds = "Coins={";
+        for (Coin coin : Coins) {
+            coinsIds += coin.getId() + ", ";
+        }
+        if (!Coins.isEmpty()) {
+            coinsIds = coinsIds.substring(0, coinsIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+        }
+        coinsIds += "}";
+        
+        return "Plafond{id=" + id + ", " + coinsIds + ", IdRevetement=" + IdRevetement + '}';
+        }
+    }
+    
+    
+     
+
+

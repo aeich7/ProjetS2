@@ -17,6 +17,7 @@ public class DessinCanvas extends Pane{
     private MainPane main ;
     private Canvas realCanvas;
     private Map<Integer, Canvas> niveauxCanvas = new HashMap<>();
+ 
     
     
     
@@ -50,7 +51,15 @@ public class DessinCanvas extends Pane{
     
     public void selectNiveau(int niveau) { // Choisir le niveau sur lequel on travaille et s'il n'existe pas, le créer
         if (!niveauxCanvas.containsKey(niveau)) {
-            Canvas newCanvas = new Canvas(this.getWidth(), this.getHeight()); 
+            Canvas newCanvas = new Canvas(this.getWidth(), this.getHeight());
+            newCanvas.heightProperty().bind(this.heightProperty());
+            newCanvas.heightProperty().addListener((o) -> {
+            this.redrawAll();
+            });
+            newCanvas.widthProperty().bind(this.widthProperty());
+            newCanvas.widthProperty().addListener((o) -> {
+            this.redrawAll();
+            });
             GraphicsContext gc = newCanvas.getGraphicsContext2D();
             gc.setFill(Color.WHITE);
             gc.fillRect(0,0, this.getWidth(),this.getHeight());

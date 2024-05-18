@@ -51,7 +51,16 @@ public class  Batiment {
 
     @Override
     public String toString() {
-        return "Batiment{" + "id=" + id + ", ListeNiveaux=" + ListeNiveaux + ", type=" + type + '}';
+        String niveauxIds = "ListeNiveaux={";
+        for (Niveau niveau : ListeNiveaux) {
+            niveauxIds += niveau.getId() + ", ";
+        }
+        if (!ListeNiveaux.isEmpty()) {
+            niveauxIds = niveauxIds.substring(0, niveauxIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+        }
+        niveauxIds += "}";
+
+        return "Batiment{" + "id=" + id + ", " + niveauxIds + ", type=" + type + '}';
     }
 
     public int getNbNiveaux() {

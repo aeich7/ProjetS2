@@ -39,6 +39,7 @@ public class MainPane extends BorderPane{
     private MenuItem newItem;
     private MenuItem openItem;
     private MenuItem SaveItem;
+    private MenuItem CalculItem;
     
     private RadioButton rbCoins;
     private RadioButton rbMurs;
@@ -53,6 +54,7 @@ public class MainPane extends BorderPane{
         this.setCenter(this.cDessin);
         this.controleur = new Controleur(this);
         this.menubar = new MenuBar();
+
         
         this.mFichier = new Menu("Fichier");
         this.mAide = new Menu("Aide");
@@ -104,7 +106,7 @@ public class MainPane extends BorderPane{
         this.choixAppart.setPromptText("Sélectionnez un appartement");
         
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
-        mFichier.getItems().addAll(newItem,openItem,SaveItem);// Sous-menus de fichier
+        mFichier.getItems().addAll(newItem,openItem,CalculItem,SaveItem);// Sous-menus de fichier
         newItem.setOnAction(t ->{
             this.controleur.NouveauProjet();
         });
@@ -123,6 +125,7 @@ public class MainPane extends BorderPane{
         this.choixAppart.setDisable(true);
         
         this.vbDroit = new VBox(cbNiveaux,rbCoins, rbMurs, rbPieces,rbAppartement, choixAppart);
+        vbDroit.setStyle("-fx-background-color: lightblue;");
         this.setRight(vbDroit);
         this.controleur.changeEtat(0);
     }
@@ -182,6 +185,11 @@ public class MainPane extends BorderPane{
     public RadioButton getRbAppartement() {
         return rbAppartement;
     }
+
+    public MenuItem getCalculItem() {
+        return CalculItem;
+    }
+    
     
    
     

@@ -81,14 +81,24 @@ public class Piece {
     public int getIdAppartement() {
         return idAppartement;
     }
-    
-    
-    
 
     @Override
     public String toString() {
-        return "Piece{" + "id=" + id + ", sol=" + sol + ", plafond=" + plafond + ", Murs=" + Murs + '}';
-    }
+        String mursIds = "Murs={";
+        for (Mur mur : Murs) {
+            mursIds += mur.getId() + ", ";
+        }
+        if (!Murs.isEmpty()) {
+            mursIds = mursIds.substring(0, mursIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+        }
+        mursIds += "}";
+
+        return "Piece{id=" + id + ", idAppartement=" + idAppartement + ", sol=" + sol + ", plafond=" + plafond + ", " + mursIds + '}';
+    }    
+    
+    
+
+   
    
     public void afficher(){
         System.out.println("Piece numéro : "+this.getId());

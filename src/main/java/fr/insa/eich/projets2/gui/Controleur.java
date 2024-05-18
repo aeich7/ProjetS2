@@ -3,18 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.eich.projets2.gui;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.scene.control.Slider;
 import fr.insa.eich.projets2.*;
-import javafx.stage.Modality;
+import java.io.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
@@ -26,11 +20,23 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.application.Platform;
-import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
-
+import static fr.insa.eich.projets2.Revetements.*; //Importer les méthodes de revêtements
+import javafx.application.Platform;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.control.RadioButton;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
 /**
  *
  * @author eicha
@@ -49,6 +55,10 @@ public class Controleur {
     private List<Mur> mursSelectionnes = new ArrayList<>();
     private List<Mur> mursProches = new ArrayList<>();
     private int gridSize = 30;
+    private String[][] revetements;
+    private String [][] revetsPourMur;
+    private String [][] revetsPourSol;
+    private String [][] revetsPourPlafond;
     
     
     public Controleur(MainPane vue){
@@ -62,16 +72,16 @@ public class Controleur {
             this.vue.getVbDroit().setManaged(false);
             this.vue.getVbDroit().setVisible(false);
             this.vue.getSaveItem().setDisable(true);
+            this.vue.getCalculItem().setDisable(true);
         }
         if (NouvelEtat == 10){
             this.vue.getVbDroit().setManaged(true);
             this.vue.getVbDroit().setVisible(true);
             this.vue.getSaveItem().setDisable(false);
-        }
-        if (NouvelEtat == 20){
-            
+            this.vue.getCalculItem().setDisable(false);
         }
     }
+    
     public void NouveauProjet() {
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
@@ -133,10 +143,40 @@ public class Controleur {
         levelsSlider.valueProperty().addListener((obs, oldval, newVal) ->
                 levelsValue.setText(String.format("%.0f", newVal)));
         
+        // Bouton pour sélectionner le fichier de revêtements
+        Button selectFileButton = new Button("Sélectionner Fichier de Revêtements");
+        GridPane.setConstraints(selectFileButton, 1, 5);
+
+        selectFileButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Sélectionner le fichier de revêtements");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers Texte", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(newWindow);
+            if (selectedFile != null) {
+            int lignes = Comptageligne(selectedFile.getAbsolutePath());
+            String[][] contenu = new String[lignes][6]; 
+            contenu = Tableau(selectedFile.getAbsolutePath(), contenu);
+            revetements = contenu; 
+            revetsPourPlafond = plafond(revetements);
+            revetsPourMur = mur(revetements);
+            revetsPourSol = sol(revetements);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Fichier chargé");
+            alert.setHeaderText(null);
+            alert.setContentText("Le fichier de revêtements a été chargé avec succès.");
+     
+            alert.showAndWait();
+            }
+        });
+        
+         
+        
         // Bouton pour soumettre les informations et enregistrement du batiment créé
         Button submitButton = new Button("Soumettre");
-        GridPane.setConstraints(submitButton, 1, 5);
+        GridPane.setConstraints(submitButton, 1, 6);
         submitButton.setOnAction(e -> {
+
         String hauteur = ceilingHeightInput.getText();
         this.hauteur = Double.parseDouble(hauteur); 
         String selectedType = buildingTypeInput.getValue();
@@ -172,7 +212,7 @@ public class Controleur {
         });
 
         grid.getChildren().addAll(projectNameLabel, projectNameInput, buildingTypeLabel, buildingTypeInput,
-                                  ceilingHeightLabel, ceilingHeightInput, levelsLabel, levelsSlider, levelsValue, submitButton);
+                                  ceilingHeightLabel, ceilingHeightInput, levelsLabel, levelsSlider, levelsValue, selectFileButton, submitButton);
 
         Scene secondScene = new Scene(grid, 500, 250);
         newWindow.setTitle("Nouveau Projet");
@@ -278,6 +318,7 @@ public class Controleur {
             gc.setFill(Color.BLACK); // Définit la couleur du point
             gc.fillOval(alignedX - 2, alignedY - 2, 4, 4); // Dessine un petit cercle pour représenter le coin aligné
         }
+        redessiner();
         }
     
     public void updateNiveaux() { // Permet d'obtenir le nombre de niveau et ainsi créer le nombre de "plans" de niveau 
@@ -463,15 +504,18 @@ public class Controleur {
                 if (isPieceUnique(niveauActuel.getPieces(), mursSelectionnes)) {
                     Piece piece = new Piece();// Créer une pièce après la sélection de 4 murs
                     for (Mur mur : mursSelectionnes){
-                    piece.AjouterMur(mur);
+                        SelectionRevêtementMur(revetsPourMur, mur);
+                        piece.AjouterMur(mur);
                     }
                     Sol Sol = new Sol(); //Création du Sol
+                    SelectionRevêtementSol(revetsPourSol, Sol); //Méthode de sélection du revêtement
                     Plafond Plafond = new Plafond(); //Création du Plafond
+                    SelectionRevêtementPlafond(revetsPourPlafond, Plafond); //Méthode de sélection du revêtement
                     for (Mur mur : mursSelectionnes){ // Ajout des coins dans le HashSet de chacun (garantissant l'unicité)
-                    Sol.AjouterCoin(mur.getCoinDebut());
-                    Sol.AjouterCoin(mur.getCoinFin());
-                    Plafond.AjouterCoin(mur.getCoinDebut());
-                    Plafond.AjouterCoin(mur.getCoinFin());
+                        Sol.AjouterCoin(mur.getCoinDebut());
+                        Sol.AjouterCoin(mur.getCoinFin());
+                        Plafond.AjouterCoin(mur.getCoinDebut());
+                        Plafond.AjouterCoin(mur.getCoinFin());
                     }
                     double sommeX = 0;
                     double sommeY = 0;
@@ -582,7 +626,7 @@ public class Controleur {
         HBox selectedHBox = this.vue.getChoixAppart().getValue();
         
         if (selectedHBox == null) {
-            System.out.println("Pas d'apprtement sélectionné !");
+            System.out.println("Pas d'appartement sélectionné !");
             return;
         }
 
@@ -650,12 +694,165 @@ public class Controleur {
             else {
                 this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).AjouterPiece(PieceProche); //Ajoute la pièce dans l'appartement
                 System.out.println("Pièce numéro "+ PieceProche.getId()+" ajoutée à l'appartement numéro : "+ this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).getId()+" !" );
-                System.out.println(this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).toString());
+                System.out.println(this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).toString()); //Ligne de test
             }
             redessiner();
         }
-        updateChoixAppart(niveauIndex); //A voir si on laisse ça ici ?? Car ça réinitiliasie la sélection...  
     }
+    
+
+    public static void SelectionRevêtementMur(String[][] revêtementsMur, Mur mur) {
+        // Créer une nouvelle fenêtre modale
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Entrez les détails pour le mur");
+
+        // Créer un groupe de boutons radio pour les revêtements muraux
+        ToggleGroup group = new ToggleGroup();
+        VBox vbox = new VBox(10);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        // Ajouter un texte pour indiquer le mur
+        Text text = new Text("Choisir le revêtement pour le mur numéro " + mur.getId());
+        vbox.getChildren().add(text);
+
+        for (String[] revêtement : revêtementsMur) {
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
+            radioButton.setToggleGroup(group);
+            vbox.getChildren().add(radioButton);
+        }
+
+        // Ajouter des champs de saisie pour le nombre de fenêtres et de portes
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(10);
+        gridPane.setVgap(5);
+        gridPane.setPadding(new Insets(20));
+
+        Label fenetresLabel = new Label("Nombre de fenêtres:");
+        TextField fenetresTextField = new TextField();
+
+        Label portesLabel = new Label("Nombre de portes:");
+        TextField portesTextField = new TextField();
+
+        gridPane.add(fenetresLabel, 0, 0);
+        gridPane.add(fenetresTextField, 1, 0);
+        gridPane.add(portesLabel, 0, 1);
+        gridPane.add(portesTextField, 1, 1);
+
+        // Ajouter un bouton pour confirmer la sélection
+        Button confirmButton = new Button("Confirmer");
+        confirmButton.setOnAction(e -> {
+            RadioButton selectedRadioButton = (RadioButton) group.getSelectedToggle();
+            if (selectedRadioButton != null) {
+                Integer idRevêtementSélectionné = (Integer) selectedRadioButton.getUserData();
+                int nombreFenetres = Integer.parseInt(fenetresTextField.getText());
+                int nombrePortes = Integer.parseInt(portesTextField.getText());
+                
+                mur.setIdRevetement(idRevêtementSélectionné);
+                mur.setNbPortes(nombrePortes);
+                mur.setNbFenetres(nombreFenetres);
+                window.close();
+                
+            }
+        });
+
+        vbox.getChildren().addAll(gridPane, confirmButton);
+
+        // Afficher la fenêtre
+        Scene scene = new Scene(vbox);
+        window.setScene(scene);
+        window.showAndWait();
+        
+    }
+
+    public static void SelectionRevêtementSol(String[][] revêtementsSol, Sol sol){
+        // Créer une nouvelle fenêtre modale
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Sélectionner le revêtement pour le sol");
+
+        // Créer un groupe de boutons radio pour les revêtements de sol
+        ToggleGroup group = new ToggleGroup();
+        VBox vbox = new VBox(10);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        // Ajouter un texte pour indiquer le sol
+        Text text = new Text("Choisir le revêtement pour le sol");
+        vbox.getChildren().add(text);
+
+        for (String[] revêtement : revêtementsSol) {
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
+            radioButton.setToggleGroup(group);
+            vbox.getChildren().add(radioButton);
+        }
+
+        // Ajouter un bouton pour confirmer la sélection
+        Button confirmButton = new Button("Confirmer");
+        confirmButton.setOnAction(e -> {
+            RadioButton selectedRadioButton = (RadioButton) group.getSelectedToggle();
+            if (selectedRadioButton != null) {
+                Integer idRevêtementSélectionné = (Integer) selectedRadioButton.getUserData();
+                sol.setIdRevetement(idRevêtementSélectionné);
+                window.close();
+            }
+        });
+
+        vbox.getChildren().addAll(confirmButton);
+
+        // Afficher la fenêtre
+        Scene scene = new Scene(vbox);
+        window.setScene(scene);
+        window.showAndWait();
+     }
+    
+    public static void SelectionRevêtementPlafond(String[][] revêtementsPlafond, Plafond plafond){
+        // Créer une nouvelle fenêtre modale
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Sélectionner le revêtement pour le plafond");
+
+        // Créer un groupe de boutons radio pour les revêtements de plafond
+        ToggleGroup group = new ToggleGroup();
+        VBox vbox = new VBox(10);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        // Ajouter un texte pour indiquer le plafond
+        Text text = new Text("Choisir le revêtement pour le plafond");
+        vbox.getChildren().add(text);
+
+        for (String[] revêtement : revêtementsPlafond) {
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
+            radioButton.setToggleGroup(group);
+            vbox.getChildren().add(radioButton);
+        }
+
+        // Ajouter un bouton pour confirmer la sélection
+        Button confirmButton = new Button("Confirmer");
+        confirmButton.setOnAction(e -> {
+            RadioButton selectedRadioButton = (RadioButton) group.getSelectedToggle();
+            if (selectedRadioButton != null) {
+                Integer idRevêtementSélectionné = (Integer) selectedRadioButton.getUserData();
+                plafond.setIdRevetement(idRevêtementSélectionné);
+                window.close();
+            }
+        });
+
+        vbox.getChildren().addAll(confirmButton);
+
+        // Afficher la fenêtre
+        Scene scene = new Scene(vbox);
+        window.setScene(scene);
+        window.showAndWait();
+        
+    }
+    
     
     public void redessiner() {
         // Récupérer la chaîne sélectionnée dans la ComboBox
@@ -697,10 +894,10 @@ public class Controleur {
             if (piece.getIdAppartement() == 0){ // Si la pièce n'a pas encore été attribuée à un appart (idAppart = 0) alors afficher le nom de la pièce en noir
                 gc.setFill(Color.BLACK);
                 gc.fillText("Pièce numéro " + piece.getId(), piece.getCentreX(), piece.getCentreY());
-                 //Sinon récupérer la couleur de l'appart pour l'affichage
-                 } else {
-        for (Appartement appart : ListeAppartements) {
-            for (Piece pieceAppart : appart.getListePieces()) {
+                
+          } else { //Sinon récupérer la couleur de l'appart pour l'affichage
+            for (Appartement appart : ListeAppartements) {
+                for (Piece pieceAppart : appart.getListePieces()) {
                     gc.setFill(appart.getColor());
                     gc.fillText("Pièce numéro " + pieceAppart.getId(), pieceAppart.getCentreX(), pieceAppart.getCentreY());
                 }
@@ -708,8 +905,9 @@ public class Controleur {
 
         }
    }
+        
     
-}
+        }
     }
                 
                

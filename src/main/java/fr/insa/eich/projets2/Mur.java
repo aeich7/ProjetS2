@@ -17,7 +17,7 @@ public class Mur {
     private double longueur;
     private int nbPortes;
     private int nbFenetres;
-     private Revetements revetement;
+    private int IdRevetement;
    
 
     public Mur(Coin coinDebut, Coin coinFin, double hauteur) {
@@ -83,8 +83,12 @@ public class Mur {
 
     @Override
     public String toString() {
-        return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut + ", coinFin=" + coinFin + ", hauteur=" + hauteur + ", longueur=" + longueur + '}';
+        return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut.getId() + ", coinFin=" + coinFin.getId() + ", nbPortes=" + nbPortes + ", nbFenetres=" + nbFenetres + ", hauteur=" + hauteur + ", IdRevetement=" + IdRevetement + '}';
     }
+
+   
+
+    
     
   public double calculSurface(){
         double surfaceTotale = this.longueur()*this.hauteur; // Assumons que cette méthode renvoie la surface totale de la pièce.
@@ -123,5 +127,32 @@ public class Mur {
     // Retourner si cette distance est inférieure au seuil
     return distance <= threshold;
 }
+    
+    public int getIdRevetement() {
+        return IdRevetement;
+    }
+
+    public void setIdRevetement(int IdRevetement) {
+        this.IdRevetement = IdRevetement;
+    }
+
+    public int getNbPortes() {
+        return nbPortes;
+    }
+
+    public void setNbPortes(int nbPortes) {
+        this.nbPortes = nbPortes;
+    }
+
+    public int getNbFenetres() {
+        return nbFenetres;
+    }
+
+    public void setNbFenetres(int nbFenetres) {
+        this.nbFenetres = nbFenetres;
+    }
+    
+    
+    
     
 }

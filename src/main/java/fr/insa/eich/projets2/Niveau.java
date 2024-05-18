@@ -21,8 +21,6 @@ public class Niveau {
     private List<Piece> pieces = new ArrayList();
 
     
-    
-
     public Niveau() {
         idCompteur++;
         this.id = idCompteur;
@@ -60,12 +58,20 @@ public class Niveau {
     public void setId(int id) {
         this.id = id;
     }
-
+    
     @Override
     public String toString() {
-        return "Niveau{" + "id=" + id + ", hauteurSousPlafond=" + hauteurSousPlafond + ", hauteurBatiment=" + hauteurBatiment + ", nbrniveau=" + nbrniveau + ", ListeAppartements=" + ListeAppartements + '}';
+        String appartementsIds = "ListeAppartements={";
+        for (Appartement appartement : ListeAppartements) {
+            appartementsIds += appartement.getId() + ", ";
+        }
+        if (!ListeAppartements.isEmpty()) {
+            appartementsIds = appartementsIds.substring(0, appartementsIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+        }
+        appartementsIds += "}";
+
+        return "Niveau{" + "id=" + id + ", " + appartementsIds + '}';
     }
-    
 
     public void addCoin(Coin coin) {
         coins.add(coin);
