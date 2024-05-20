@@ -66,7 +66,10 @@ public class Controleur {
         attachMouseEvents();
     }
 
-
+    public Donnees<Batiment> getdBatiment() {
+        return dBatiment;
+    }
+    
     public void changeEtat(int NouvelEtat){
         if (NouvelEtat == 0){
             this.vue.getVbDroit().setManaged(false);
@@ -160,6 +163,9 @@ public class Controleur {
             revetsPourPlafond = plafond(revetements);
             revetsPourMur = mur(revetements);
             revetsPourSol = sol(revetements);
+            
+        }
+            
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fichier chargé");
@@ -168,10 +174,8 @@ public class Controleur {
      
             alert.showAndWait();
             }
-        });
-        
-         
-        
+        );
+
         // Bouton pour soumettre les informations et enregistrement du batiment créé
         Button submitButton = new Button("Soumettre");
         GridPane.setConstraints(submitButton, 1, 6);
@@ -208,7 +212,10 @@ public class Controleur {
            this.dBatiment.setCurrentData(batiment);
            this.updateNiveaux();
            this.changeEtat(10);
+           this.dBatiment.getCurrentData().setListeRevets(creerRevetements(revetements, gridSize)); //enregistrer tous les revêtements sur le batiment
+  
            newWindow.close();
+           
         });
 
         grid.getChildren().addAll(projectNameLabel, projectNameInput, buildingTypeLabel, buildingTypeInput,
@@ -718,7 +725,7 @@ public class Controleur {
         vbox.getChildren().add(text);
 
         for (String[] revêtement : revêtementsMur) {
-            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€/m2");
             radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
             radioButton.setToggleGroup(group);
             vbox.getChildren().add(radioButton);
@@ -785,7 +792,7 @@ public class Controleur {
         vbox.getChildren().add(text);
 
         for (String[] revêtement : revêtementsSol) {
-            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€/m2");
             radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
             radioButton.setToggleGroup(group);
             vbox.getChildren().add(radioButton);
@@ -827,7 +834,7 @@ public class Controleur {
         vbox.getChildren().add(text);
 
         for (String[] revêtement : revêtementsPlafond) {
-            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€");
+            RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€/m2");
             radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
             radioButton.setToggleGroup(group);
             vbox.getChildren().add(radioButton);
@@ -852,7 +859,6 @@ public class Controleur {
         window.showAndWait();
         
     }
-    
     
     public void redessiner() {
         // Récupérer la chaîne sélectionnée dans la ComboBox

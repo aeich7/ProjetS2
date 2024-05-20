@@ -4,7 +4,8 @@
  */
 package fr.insa.eich.projets2;
 import java.io.*;
-
+import java.util.HashMap;
+import java.util.Map;
 /**
  *
  * @author Bruno
@@ -15,16 +16,67 @@ public class Revetements {
     private boolean pourMur;
     private boolean pourSol;
     private boolean pourPlafond; 
-    private double Prixunitaire; 
+    private double Prixunitaire;
+    private double SurfaceTot = 0; // Pour l'initialisation
+    private double prixTot = 0; //Pour l'initialisation
+    private int echelle; //Pour le calcul des surfaces + prix
 
-    public Revetements(int id, String designation, boolean pourMur, boolean pourSol, boolean pourPlafond, double Prixunitaire) {
+    public Revetements(int id, String designation, boolean pourMur, boolean pourSol, boolean pourPlafond, double Prixunitaire, int echelle) {
         this.id = id;
         this.designation = designation;
         this.pourMur = pourMur;
         this.pourSol = pourSol;
         this.pourPlafond = pourPlafond;
         this.Prixunitaire = Prixunitaire;
+        this.echelle = echelle;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public boolean isPourMur() {
+        return pourMur;
+    }
+
+    public void setPourMur(boolean pourMur) {
+        this.pourMur = pourMur;
+    }
+
+    public boolean isPourSol() {
+        return pourSol;
+    }
+
+    public void setPourSol(boolean pourSol) {
+        this.pourSol = pourSol;
+    }
+
+    public boolean isPourPlafond() {
+        return pourPlafond;
+    }
+
+    public void setPourPlafond(boolean pourPlafond) {
+        this.pourPlafond = pourPlafond;
+    }
+
+    public double getPrixUnitaire() {
+        return Prixunitaire;
+    }
+
+    public void setPrixunitaire(double Prixunitaire) {
+        this.Prixunitaire = Prixunitaire;
+    }
+    
+    
+    
    public static int Comptageligne(String Fichier){ // compter le nombre de lignes du fichier à lire
 		int compteur=0;
 		try{
@@ -156,7 +208,76 @@ public class Revetements {
         return "Revetements{" + "id=" + id + ", designation=" + designation + ", pourMur=" + pourMur + ", pourSol=" + pourSol + ", pourPlafond=" + pourPlafond + ", Prixunitaire=" + Prixunitaire + '}';
     }
   
+    public static Map<Integer,Revetements> creerRevetements(String[][] tableau, int echelle) {
+        Map<Integer,Revetements> revetements = new HashMap<>();
+        for (String[] ligne : tableau) {
+            try {
+                int id = Integer.parseInt(ligne[0]);
+                String designation = ligne[1];
+                boolean pourMur = estApplicable(ligne[2]);
+                boolean pourSol = estApplicable(ligne[3]);
+                boolean pourPlafond = estApplicable(ligne[4]);
+                double prixUnitaire = Double.parseDouble(ligne[5]);
+                Revetements revetement = new Revetements(id, designation, pourMur, pourSol, pourPlafond, prixUnitaire, echelle);
+                revetements.put(revetement.getId(), revetement);
+            } catch (Exception e) {
+                System.out.println("Erreur lors de la création d'un objet Revetements : " + e.getMessage());
+            }
+        }
+        return revetements;
+        }
+    
+    
+    public static boolean estApplicable(String str){
+        boolean estApplicable = false;
+        if (str.equals("1")){
+            estApplicable = true;
+        }
+        else {
+            estApplicable = false;     
+        }
+        return estApplicable;
+    }
 
+    public double getSurfaceTot() {
+        return SurfaceTot;
+    }
+
+    public void setSurfaceTot(double SurfaceTot) {
+        this.SurfaceTot = SurfaceTot;
+    }
+
+    public double getPrixTot() {
+        return prixTot;
+    }
+
+    public void setPrixTot(double prixTot) {
+        this.prixTot = prixTot;
+    }
+
+    public int getEchelle() {
+        return echelle;
+    }
+    
+    
+    
+    public static void ActualiserRevetMur(int idRevet, Map<Integer,Revetements> revets, double surface){
+        double SurfaceTotActuelle = revets.get(idRevet).getSurfaceTot();
+        double PrixTotActuel = revets.get(idRevet).getPrixTot();
+        double NouvSurface = SurfaceTotActuelle + surface/revets.get(idRevet).getEchelle();
+        double NouvPrixTot = revets.get(idRevet).getPrixUnitaire() * NouvSurface;
+        revets.get(idRevet).setPrixTot(NouvPrixTot);
+        revets.get(idRevet).setSurfaceTot(NouvSurface);
+    }
+    
+    public static void ActualiserRevetSolPlafond(int idRevet, Map<Integer,Revetements> revets, double surface){
+        double SurfaceTotActuelle = revets.get(idRevet).getSurfaceTot();
+        double PrixTotActuel = revets.get(idRevet).getPrixTot();
+        double NouvSurface = SurfaceTotActuelle + surface/Math.pow(revets.get(idRevet).getEchelle(), 2); // On prend l'échelle au carré car c'est une surface de sol ou plafond
+        double NouvPrixTot = revets.get(idRevet).getPrixUnitaire() * NouvSurface;
+        revets.get(idRevet).setPrixTot(NouvPrixTot);
+        revets.get(idRevet).setSurfaceTot(NouvSurface);
+    }
  /*int ide = Integer.parseInt(resultat[i][0]); // manipulation pour passer de string à int 
             double prx = Double.parseDouble(resultat[i][5]); // manipulation pour passer de string à double 
      */ 

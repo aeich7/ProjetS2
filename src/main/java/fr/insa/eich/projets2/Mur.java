@@ -30,10 +30,10 @@ public class Mur {
            
     public  double longueur(){
         if (this.coinDebut.getX() == this.coinFin.getX()){
-            this.longueur = this.coinFin.getY() - this.coinDebut.getY();
+            this.longueur = Math.abs(this.coinFin.getY() - this.coinDebut.getY());
         }
         else if (this.coinDebut.getY() == this.coinFin.getY()){
-            this.longueur = this.coinFin.getX()- this.coinDebut.getX();
+            this.longueur = Math.abs(this.coinFin.getX()- this.coinDebut.getX());
         }
         return this.longueur;
     }
@@ -86,10 +86,6 @@ public class Mur {
         return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut.getId() + ", coinFin=" + coinFin.getId() + ", nbPortes=" + nbPortes + ", nbFenetres=" + nbFenetres + ", hauteur=" + hauteur + ", IdRevetement=" + IdRevetement + '}';
     }
 
-   
-
-    
-    
   public double calculSurface(){
         double surfaceTotale = this.longueur()*this.hauteur; // Assumons que cette méthode renvoie la surface totale de la pièce.
         double surfacePortes = this.nbPortes * 0.90 * 2.10; // Surface totale occupée par les portes.

@@ -18,7 +18,7 @@ public class Niveau {
     private List<Coin> coins = new ArrayList<>();
     private List<Mur> murs = new ArrayList<>();
     private List<Appartement> ListeAppartements = new ArrayList<>();
-    private List<Piece> pieces = new ArrayList();
+    private List<Piece> ListePieces = new ArrayList();
 
     
     public Niveau() {
@@ -35,7 +35,7 @@ public class Niveau {
     }
     
     public List<Piece> getPieces(){
-        return pieces;
+        return ListePieces;
     }
     
     
@@ -82,8 +82,14 @@ public class Niveau {
     }
     
     public void addPiece(Piece piece){
-        pieces.add(piece);
+        ListePieces.add(piece);
     }
+
+    public List<Piece> getListePieces() {
+        return ListePieces;
+    }
+    
+    
     
     
 }

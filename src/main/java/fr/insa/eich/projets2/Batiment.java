@@ -4,7 +4,7 @@
  */
 package fr.insa.eich.projets2;
 import java.util.*;
-
+import static fr.insa.eich.projets2.Revetements.*;
 /**
  *
  * @author arbre
@@ -15,6 +15,8 @@ public class  Batiment {
     private int nbNiveaux;
     private List<Niveau> ListeNiveaux= new ArrayList<>();
     private String type;
+    private Map<Integer, Revetements> ListeRevets;
+    
 
      public Batiment(String type) {
         this.type = type;
@@ -29,7 +31,15 @@ public class  Batiment {
      public void setType(String type) {
              this.type = type;
      }
+     
+    
+    public void setListeRevets(Map<Integer, Revetements> ListeRevets) {
+        this.ListeRevets = ListeRevets;
+    }
 
+    public Map<Integer, Revetements> getListeRevets() {
+        return ListeRevets;
+    }
     public void Afficher(){
        System.out.println("Type de batiment : " + type);
     }
@@ -37,7 +47,7 @@ public class  Batiment {
     public void AjouterNiveau(Niveau Niveau1){
         ListeNiveaux.add(Niveau1);
     }
-
+    
     public List<Niveau> getListeNiveaux() {
         return ListeNiveaux;
     }
@@ -71,7 +81,57 @@ public class  Batiment {
         this.nbNiveaux = nbNiveaux;
     }
     
+    public void CalculDevis(){
+        for (Map.Entry<Integer, Revetements> Revets : ListeRevets.entrySet()){ //Réinitialiser le devis à chaque itération de la méthode Devis
+            Revets.getValue().setSurfaceTot(0);
+            Revets.getValue().setPrixTot(0);
+        }
+        if(this.type.equalsIgnoreCase("Immeuble")){
+            for (Niveau niv : this.getListeNiveaux()){
+                for (Appartement appart : niv.getListeAppartement()){
+                    for (Piece piece : appart.getListePieces()){
+                        for (Mur mur : piece.getListeMurs()){
+                            ActualiserRevetMur(mur.getIdRevetement(),this.ListeRevets,mur.calculSurface());
+                        }
+                        ActualiserRevetSolPlafond(piece.getSol().getIdRevetement(),this.ListeRevets,piece.getSol().calculSurface());
+                        ActualiserRevetSolPlafond(piece.getPlafond().getIdRevetement(),this.ListeRevets,piece.getPlafond().calculSurface());
+                    }
+                   
+                }
+                
+            }
+        }
+        else{
+            for (Niveau niv : this.getListeNiveaux()){
+                for (Piece piece : niv.getListePieces()){
+                        for (Mur mur : piece.getListeMurs()){
+                            ActualiserRevetMur(mur.getIdRevetement(),this.ListeRevets,mur.calculSurface());
+                        }
+                        ActualiserRevetSolPlafond(piece.getSol().getIdRevetement(),this.ListeRevets,piece.getSol().calculSurface());
+                        ActualiserRevetSolPlafond(piece.getPlafond().getIdRevetement(),this.ListeRevets,piece.getPlafond().calculSurface());
+                    }
+            }
+        }
+        double PrixBat = 0;
+        for (Map.Entry<Integer, Revetements> infos : this.getListeRevets().entrySet()){
+            System.out.println();
+            System.out.println("Revêtement numéro : "+infos.getValue().getId()+" .");
+            System.out.println("Désignation : "+infos.getValue().getDesignation()+" .");
+            System.out.println("Surface totale : "+infos.getValue().getSurfaceTot()+"m2.");
+            System.out.println("Prix total : "+infos.getValue().getPrixTot()+"€.");
+            PrixBat = PrixBat + infos.getValue().getPrixTot();
+            StringBuilder ligneDeTirets = new StringBuilder();
+            for (int i = 0; i < 50; i++) {
+                ligneDeTirets.append("-");
+            }
+            System.out.println();
+            System.out.println(ligneDeTirets.toString());
+        }
+        System.out.println("Prix total du batiment : "+PrixBat+"€.");
+        }
     
+    
+ 
         
     }
 

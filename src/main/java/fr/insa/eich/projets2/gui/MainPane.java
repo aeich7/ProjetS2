@@ -37,7 +37,6 @@ public class MainPane extends BorderPane{
     
     
     private MenuItem newItem;
-    private MenuItem openItem;
     private MenuItem SaveItem;
     private MenuItem CalculItem;
     
@@ -61,8 +60,8 @@ public class MainPane extends BorderPane{
         this.mCredits = new Menu("Crédits");
         
         this.newItem = new MenuItem("Nouveau projet");
-        this.openItem = new MenuItem("Ouvrir");
         this.SaveItem = new MenuItem("Sauvegarder");
+        this.CalculItem = new MenuItem("Devis");
         
         this.rbCoins = new RadioButton("Coins");
         rbCoins.setOnAction(e ->{
@@ -106,9 +105,12 @@ public class MainPane extends BorderPane{
         this.choixAppart.setPromptText("Sélectionnez un appartement");
         
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
-        mFichier.getItems().addAll(newItem,openItem,CalculItem,SaveItem);// Sous-menus de fichier
+        mFichier.getItems().addAll(newItem,CalculItem,SaveItem);// Sous-menus de fichier
         newItem.setOnAction(t ->{
             this.controleur.NouveauProjet();
+        });
+        CalculItem.setOnAction(t -> {
+            this.controleur.getdBatiment().getCurrentData().CalculDevis();
         });
         this.vbHaut = new VBox(menubar);
         this.setTop(vbHaut);
@@ -148,10 +150,6 @@ public class MainPane extends BorderPane{
 
     public MenuItem getNewItem() {
         return newItem;
-    }
-
-    public MenuItem getOpenItem() {
-        return openItem;
     }
 
     public MenuItem getSaveItem() {
