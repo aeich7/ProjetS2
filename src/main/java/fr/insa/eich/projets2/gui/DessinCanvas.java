@@ -17,6 +17,7 @@ public class DessinCanvas extends Pane{
     private MainPane main ;
     private Canvas realCanvas;
     private Map<Integer, Canvas> niveauxCanvas = new HashMap<>();
+    private Controleur controleur = null;
  
     
     
@@ -29,10 +30,16 @@ public class DessinCanvas extends Pane{
         this.realCanvas.heightProperty().bind(this.heightProperty());
         this.realCanvas.heightProperty().addListener((o) -> {
             this.redrawAll();
+            if (this.controleur != null){
+                controleur.redessiner();
+            }
         });
         this.realCanvas.widthProperty().bind(this.widthProperty());
         this.realCanvas.widthProperty().addListener((o) -> {
             this.redrawAll();
+            if (this.controleur != null){
+                controleur.redessiner();
+            }
         });
         this.redrawAll();
     }
@@ -55,10 +62,16 @@ public class DessinCanvas extends Pane{
             newCanvas.heightProperty().bind(this.heightProperty());
             newCanvas.heightProperty().addListener((o) -> {
             this.redrawAll();
+            if (this.controleur != null){
+                controleur.redessiner();
+            }
             });
             newCanvas.widthProperty().bind(this.widthProperty());
             newCanvas.widthProperty().addListener((o) -> {
             this.redrawAll();
+            if (this.controleur != null){
+                controleur.redessiner();
+            }
             });
             GraphicsContext gc = newCanvas.getGraphicsContext2D();
             gc.setFill(Color.WHITE);
@@ -71,6 +84,15 @@ public class DessinCanvas extends Pane{
         }
         realCanvas = niveauxCanvas.get(niveau);
         realCanvas.setVisible(true);
+        this.controleur.redessiner();
+    }
+
+    public void setControleur(Controleur controleur) {
+        this.controleur = controleur;
+    }
+
+    public Controleur getControleur() {
+        return controleur;
     }
     
     

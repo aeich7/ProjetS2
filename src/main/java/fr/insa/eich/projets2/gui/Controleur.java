@@ -213,7 +213,7 @@ public class Controleur {
            this.updateNiveaux();
            this.changeEtat(10);
            this.dBatiment.getCurrentData().setListeRevets(creerRevetements(revetements, gridSize)); //enregistrer tous les revêtements sur le batiment
-  
+           this.vue.getcDessin().setControleur(this.vue.getControleur());
            newWindow.close();
            
         });
@@ -869,6 +869,15 @@ public class Controleur {
         gc.clearRect(0, 0, vue.getcDessin().getRealCanvas().getWidth(), vue.getcDessin().getRealCanvas().getHeight());  // Efface le contenu précédent
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, vue.getcDessin().getRealCanvas().getWidth(), vue.getcDessin().getRealCanvas().getHeight()); // Applique un fond blanc
+        int i = 0;
+        for (i = 0; i<=vue.getcDessin().getRealCanvas().getWidth(); i=i+gridSize){ //Création de la grille à l'échelle (distance entre deux intersections = 1 m)
+            int j = 0;
+            for (j = 0; j<=vue.getcDessin().getRealCanvas().getHeight(); j=j+gridSize){
+                gc.setStroke(Color.LIGHTGRAY);
+                gc.strokeLine(i, j+1, i, j-1);
+                gc.strokeLine(i+1, j, i-1, j);
+            }
+        }
         List<Mur> ListeMurs = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getMurs();
         List<Coin> ListeCoins = dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getCoins();
         List<Mur> ListeMursSelectionnes = mursSelectionnes;
