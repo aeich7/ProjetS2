@@ -26,9 +26,15 @@ public class ProjetS2 {
             System.out.println(); // Nouvelle ligne après chaque ligne de la matrice
         }
     }
+    public static void afficherTableau(double []tableau){
+        for (int i=0; i <tableau.length; i++){
+            System.out.print(tableau[i]+" ");
+        }
+    } 
 
     public static void main(String[] args) {
         
+        double [] Tab_revetements = new double [19]; // création d'un tableau pour y metter surface pour chaque revêtement (case 1 est pour revêtement 1, case 2 pour revêtement 2 ...)
         Scanner scanner = new Scanner(System.in);
         double hauteur; 
         System.out.println("Quelle est la hauteur sous plafond de l'immeuble ? ");
@@ -124,6 +130,7 @@ public class ProjetS2 {
                 l=l+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)
                  
         }
+        Tab_revetements[valeur-1]= Tab_revetements[valeur-1] + dim_tot; // on rajoute la surface où on met du revêtement pour ensuite faire le calcul prix total par revêtement
         double prix_unitaire_mur = Double.parseDouble(results[l][2]); // methode pour convertir case du tableau en double 
         double prix_mur = dim_tot * prix_unitaire_mur ; // pour avoir le prix total de ce mur
         prix_total_piece=prix_total_piece+prix_mur;
@@ -152,6 +159,7 @@ public class ProjetS2 {
         
         cout_sol = sol_appartement.calculSurface()*prix_unitaire_sol;  
         System.out.println(" Le cout du sol est de "+cout_sol+" €");
+        Tab_revetements[valeur_sol-1]=Tab_revetements[valeur_sol-1]+sol_appartement.calculSurface(); // on rajoute la surface où on y a foutu du revetement dans la case de la surface totale du revêtement
         
         prix_total_piece= prix_total_piece + cout_sol;
         System.out.println(" Le prix de la pièce sans plafond est de "+prix_total_piece+" €"); // juste pour vérifier que ça marche 
@@ -169,15 +177,22 @@ public class ProjetS2 {
         while (Integer.parseInt(results2[n][0])!=valeur_plafond){  // On lit l'id rentré par user et on cherche le prix à l'unite
                 n=n+1;     // pour cela, on convertit tout en int et on regarde ligne par ligne la 1e colonne (celle des id)        
         }
+        Tab_revetements [valeur_plafond-1]= Tab_revetements[valeur_plafond-1]+plafond.calculSurface();  //on rajoute dans la case correspondante au revetement qu'on a ajouté la surface totale sur laquelle on a mis ce revetement  
         double prix_unitaire_plafond = Double.parseDouble(results2[n][2]);
         double cout_plafond;
-        cout_plafond = plafond.calculSurface()*prix_unitaire_plafond; 
+        cout_plafond = plafond.calculSurface()*prix_unitaire_plafond;
         System.out.println("Le cout du plafond est de "+cout_plafond+" €");
         prix_total_piece= prix_total_piece + cout_plafond; 
         System.out.println();
         System.out.println(" Le prix total de la pièce est de "+prix_total_piece+" €");
+        
+      afficherTableau (Tab_revetements); // on affiche le tableau de prix par revêtement suffit juste de faire le calcul maintenant 
+      System.out.println();
+      for (int j= 0;j<19;j++){
+           System.out.println("Prix du revetement" + (j+1) + "=" + Tab_revetements[j]* Double.parseDouble(resultat[j][5]));
+      }
+     
      
       
      }
 }
-   
