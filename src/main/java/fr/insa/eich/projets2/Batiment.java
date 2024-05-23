@@ -5,6 +5,11 @@
 package fr.insa.eich.projets2;
 import java.util.*;
 import static fr.insa.eich.projets2.Revetements.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.io.File;
 /**
  *
  * @author arbre
@@ -16,12 +21,15 @@ public class  Batiment {
     private List<Niveau> ListeNiveaux= new ArrayList<>();
     private String type;
     private Map<Integer, Revetements> ListeRevets;
+    private String nom;
+    
     
 
-     public Batiment(String type) {
+     public Batiment(String type, String nom) {
         this.type = type;
         compteurID++;
         this.id=compteurID;
+        this.nom = nom;
      }
 
      public String getType() {
@@ -59,6 +67,11 @@ public class  Batiment {
         this.id = id;
     }
 
+    public String getNom() {
+        return nom;
+    }
+    
+    
     @Override
     public String toString() {
         String niveauxIds = "ListeNiveaux={";
@@ -70,7 +83,7 @@ public class  Batiment {
         }
         niveauxIds += "}";
 
-        return "Batiment{" + "id=" + id + ", " + niveauxIds + ", type=" + type + '}';
+        return "Batiment{" + "id=" + id + ", " + niveauxIds + ", type=" + type + ", nom="+ nom + '}';
     }
 
     public int getNbNiveaux() {
@@ -113,24 +126,85 @@ public class  Batiment {
             }
         }
         double PrixBat = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter ("Devis.txt"))) {
         for (Map.Entry<Integer, Revetements> infos : this.getListeRevets().entrySet()){
-            System.out.println();
-            System.out.println("Revêtement numéro : "+infos.getValue().getId()+" .");
-            System.out.println("Désignation : "+infos.getValue().getDesignation()+" .");
-            System.out.println("Surface totale : "+infos.getValue().getSurfaceTot()+"m2.");
-            System.out.println("Prix total : "+infos.getValue().getPrixTot()+"€.");
+            writer.newLine();
+            writer.write("Revêtement numéro : "+infos.getValue().getId()+" .");
+            writer.write("Désignation : "+infos.getValue().getDesignation()+" .");
+            writer.write("Surface totale : "+infos.getValue().getSurfaceTot()+"m2.");
+            writer.write("Prix total : "+infos.getValue().getPrixTot()+"€.");
             PrixBat = PrixBat + infos.getValue().getPrixTot();
             StringBuilder ligneDeTirets = new StringBuilder();
             for (int i = 0; i < 50; i++) {
                 ligneDeTirets.append("-");
             }
-            System.out.println();
-            System.out.println(ligneDeTirets.toString());
+            writer.newLine();
+            writer.write(ligneDeTirets.toString());
         }
-        System.out.println("Prix total du batiment : "+PrixBat+"€.");
+        writer.newLine(); 
+        writer.newLine();
+        writer.write("Prix total du batiment : "+PrixBat+"€.");
+        }catch (IOException e){
+                System.err.println("Une erreur est survenue lors de l'écriture dans le fichier ");
+                }
         }
     
     
+        public void sauvegarderBatiment() {
+            File file = new File(this.getNom()+".txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            int nbNiveaux = this.getNbNiveaux();
+            // Sauvegarder les informations de chaque niveau
+            writer.write(this.toString());
+            writer.newLine();
+
+        for (int i = 0; i < nbNiveaux; i++) {
+            writer.write(this.getListeNiveaux().get(i).toString());
+            writer.newLine();
+            
+            List<Mur> ListeMurs = this.getListeNiveaux().get(i).getMurs();
+            List<Coin> ListeCoins = this.getListeNiveaux().get(i).getCoins();
+            List<Piece> ListePieces = this.getListeNiveaux().get(i).getPieces();
+            List<Appartement> ListeAppartements = this.getListeNiveaux().get(i).getListeAppartement();
+            
+           
+            for (Coin coin : ListeCoins) {
+                writer.write(coin.toString());
+                writer.newLine();
+            }
+            
+             for (Mur mur : ListeMurs) {
+                writer.write(mur.toString());
+                writer.newLine();
+            }
+            
+            
+            for (Piece piece : ListePieces) {
+                writer.write(piece.toString());
+                writer.newLine();
+                writer.write(piece.getPlafond().toString());
+                writer.newLine();
+                writer.write(piece.getSol().toString());
+                writer.newLine();
+            }
+
+            if (this.type.equals("Immeuble")){
+                for (Appartement appart : ListeAppartements) {
+                    writer.write(appart.toString());
+                    writer.newLine();
+            }
+            }
+        }
+        
+        for (Map.Entry<Integer, Revetements> Revets : ListeRevets.entrySet()){
+            writer.write(Revets.getValue().toString());
+            writer.newLine();
+        }
+        writer.flush();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
  
         
     }

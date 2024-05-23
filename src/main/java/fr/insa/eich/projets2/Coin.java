@@ -16,7 +16,8 @@ public class Coin  {
     private double y;
 
     public Coin(double x, double y) {
-        this.id = idCompteur++;
+        idCompteur++;
+        this.id = idCompteur;
         this.x = x;
         this.y = y;
     }
@@ -53,7 +54,7 @@ public class Coin  {
         return ((Math.abs(coin.getX() - this.x) <= 0.5) && (Math.abs(coin.getY() - this.y) <= 0.5));
     }
    
-   public static Coin findCoinAt(List<Coin> coins, double x, double y) {
+   public static Coin findCoinAt(List<Coin> coins, double x, double y) { //Récupérer le coin enregistré dans une liste à partit des coordonées de clic.
         for (Coin coin : coins) {
             if (Math.abs(coin.getX() - x) <= 15 && Math.abs(coin.getY() - y) <= 15) {
                 return coin;
@@ -62,6 +63,12 @@ public class Coin  {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "Coin{" + "id=" + id + ", x=" + x + ", y=" + y + '}';
+    }
+
+    
     public static void setIdCompteur(int idCompteur) {
         Coin.idCompteur = idCompteur;
     }

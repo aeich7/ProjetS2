@@ -15,7 +15,6 @@ public class Appartement {
     private int id;
     private int niveau;
     private List<Piece> ListePieces = new ArrayList<>();
-    private double surfaceAppartement;
     private Color color;
 
     
@@ -25,13 +24,6 @@ public class Appartement {
         this.niveau =niveau;
         this.color = generateRandomColor();
     }
-    public double surfaceAppartementAuSol(){
-        surfaceAppartement=0;
-        for(Piece piece : ListePieces){
-         surfaceAppartement+=piece.getSol().calculSurface();   
-        }
-        return surfaceAppartement;
-            }
     
     public void AjouterPiece(Piece Piece1){
         ListePieces.add(Piece1);
@@ -47,6 +39,11 @@ public class Appartement {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getNiveau() {
+        return niveau;
+    }
+    
     
     // Méthode pour générer une couleur aléatoire associée à l'appartement
     private Color generateRandomColor() {
@@ -62,7 +59,7 @@ public class Appartement {
 
     @Override
     public String toString() {
-        return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", ListePieces=" + ListePieces + ", surfaceAppartement=" + surfaceAppartement + '}';
+        return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", ListePieces=" + ListePieces + '}';
     }
     
     public String toComboBox(){ // Pour l'affichage dans le ComboBox

@@ -18,11 +18,20 @@ public class Plafond  {
     private int id ;
     private HashSet<Coin> Coins = new HashSet<>();
     private int IdRevetement;
+    private int IdPiece;
 
     public Plafond() {
         idCompteur++;
         this.id = idCompteur;
         
+    }
+
+    public int getIdPiece() {
+        return IdPiece;
+    }
+
+    public void setIdPiece(int IdPiece) {
+        this.IdPiece = IdPiece;
     }
     
     
@@ -88,14 +97,14 @@ public class Plafond  {
     public String toString() {
         String coinsIds = "Coins={";
         for (Coin coin : Coins) {
-            coinsIds += coin.getId() + ", ";
+            coinsIds += coin.getId() + ",";
         }
         if (!Coins.isEmpty()) {
-            coinsIds = coinsIds.substring(0, coinsIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+            coinsIds = coinsIds.substring(0, coinsIds.length() - 1); // Supprimer la virgule et l'espace en trop à la fin
         }
         coinsIds += "}";
         
-        return "Plafond{id=" + id + ", " + coinsIds + ", IdRevetement=" + IdRevetement + '}';
+        return "Plafond{id=" + id + ", " + coinsIds + ", IdRevetement=" + IdRevetement + ", IdPiece=" + IdPiece +'}';
         }
     }
     

@@ -86,14 +86,14 @@ public class Piece {
     public String toString() {
         String mursIds = "Murs={";
         for (Mur mur : Murs) {
-            mursIds += mur.getId() + ", ";
+            mursIds += mur.getId() + ",";
         }
         if (!Murs.isEmpty()) {
-            mursIds = mursIds.substring(0, mursIds.length() - 2); // Supprimer la virgule et l'espace en trop à la fin
+            mursIds = mursIds.substring(0, mursIds.length() - 1); // Supprimer la virgule et l'espace en trop à la fin
         }
         mursIds += "}";
 
-        return "Piece{id=" + id + ", idAppartement=" + idAppartement + ", sol=" + sol + ", plafond=" + plafond + ", " + mursIds + '}';
+        return "Piece{id=" + id + ", idAppartement=" + idAppartement + ", sol=" + sol.getId() + ", plafond=" + plafond.getId() + ", " + mursIds + '}';
     }    
     
     

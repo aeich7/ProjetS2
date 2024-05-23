@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.eich.projets2.gui;
+import java.util.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
@@ -70,6 +71,54 @@ public class Controleur {
         return dBatiment;
     }
     
+    public MainPane getVue() {
+        return vue;
+    }
+     public void Aide_devis(){
+            Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
+            alert1.getDialogPane().setMinWidth(400); // Configuration de la taille de la fenêtre d'alerte 
+            alert1.getDialogPane().setMinHeight(150);
+            alert1.setTitle("Aide pour le devis");
+            alert1.setHeaderText(null);
+            alert1.setContentText("Pour calculer le devis de toutes les pièces que vous avez construites ou allez construire, il faudra aller dans le menu 'Fichier' puis appuyer sur le bouton 'Devis', sinon votre devis ne sera pas calculé ! ");
+            alert1.showAndWait();
+            }
+     public void Aide_autre(){
+            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            alert2.getDialogPane().setMinWidth(300); 
+            alert2.getDialogPane().setMinHeight(100);
+            alert2.setTitle("Aide autre");
+            alert2.setHeaderText(null);
+            alert2.setContentText("Si rien ne se passe quand vous cliquez sur un bouton, regardez la console, les erreurs y sont notées  !! ");
+            alert2.showAndWait();
+            }
+     public void Creditsecole(){
+         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getDialogPane().setMinWidth(300); 
+            alert.getDialogPane().setMinHeight(100);
+            alert.setTitle("Crédits école");
+            alert.setHeaderText(null);
+            alert.setContentText("Copyrights INSA Strasbourg, tous droits réservés");
+            alert.showAndWait();
+     }
+    public void Creditseleves(){
+         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getDialogPane().setMinWidth(300); 
+            alert.getDialogPane().setMinHeight(100);
+            alert.setTitle("Crédits élèves");
+            alert.setHeaderText(null);
+            alert.setContentText("Créé par Eich Aurélien le boss, Merckling Bruno et Kerloc'h Hotalu");
+            alert.showAndWait();
+    }
+    public void Aide_échelle(){
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getDialogPane().setMinWidth(200); 
+            alert.getDialogPane().setMinHeight(100);
+            alert.setTitle("Aide pour l'échelle");
+            alert.setHeaderText(null);
+            alert.setContentText("La distance entre deux points sur le plan représente un mètre ! ");
+            alert.showAndWait();
+    }
     public void changeEtat(int NouvelEtat){
         if (NouvelEtat == 0){
             this.vue.getVbDroit().setManaged(false);
@@ -183,8 +232,9 @@ public class Controleur {
 
         String hauteur = ceilingHeightInput.getText();
         this.hauteur = Double.parseDouble(hauteur); 
+        String nom = projectNameInput.getText();
         String selectedType = buildingTypeInput.getValue();
-        Batiment batiment = new Batiment(selectedType);
+        Batiment batiment = new Batiment(selectedType, nom);
         int nbNiveaux = (int) levelsSlider.getValue();
         batiment.setNbNiveaux(nbNiveaux);
         int AppartParNiveau = 0; // Variable pour stocker le nombre d'appartements par niveau
@@ -199,7 +249,7 @@ public class Controleur {
                 batiment.AjouterNiveau(niveau);
                 if ("Immeuble".equals(selectedType)) {
                     for (int k = 1; k<=AppartParNiveau; k++){
-                        Appartement appartement = new Appartement(j);
+                        Appartement appartement = new Appartement(j+1);
                         batiment.getListeNiveaux().get(j).AjouterAppartement(appartement);
                     }
                 }
@@ -419,6 +469,7 @@ public class Controleur {
             gc.strokeLine(deb.getX(), deb.getY(), fin.getX(), fin.getY());
 
             Mur nouveauMur = new Mur(deb, fin, this.hauteur);
+            nouveauMur.setIdNiveau(niveauIndex+1);
             niveauActuel.addMur(nouveauMur);
         } else {
         System.out.println("Un mur entre ces deux coins existe déjà.");
@@ -439,7 +490,7 @@ public class Controleur {
         if (choixMur.size() != 1) {
             // Plusieurs murs proches ou aucun mur trouvé, nécessite une gestion supplémentaire
             if (choixMur.size() > 1) {
-                // Implémenter ici un choix utilisateur (par exemple via une boîte de dialogue)
+                
                 // Créer une alerte avec un type de confirmation
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Sélection du mur");
@@ -485,8 +536,6 @@ public class Controleur {
                 }
             });
                 
-
-
                 // Définir le ComboBox comme contenu supplémentaire de l'alerte
                 alert.getDialogPane().setContent(comboBox);
 
@@ -515,8 +564,10 @@ public class Controleur {
                         piece.AjouterMur(mur);
                     }
                     Sol Sol = new Sol(); //Création du Sol
+                    Sol.setIdPiece(piece.getId());
                     SelectionRevêtementSol(revetsPourSol, Sol); //Méthode de sélection du revêtement
                     Plafond Plafond = new Plafond(); //Création du Plafond
+                    Plafond.setIdPiece(piece.getId());
                     SelectionRevêtementPlafond(revetsPourPlafond, Plafond); //Méthode de sélection du revêtement
                     for (Mur mur : mursSelectionnes){ // Ajout des coins dans le HashSet de chacun (garantissant l'unicité)
                         Sol.AjouterCoin(mur.getCoinDebut());
@@ -530,8 +581,8 @@ public class Controleur {
                         sommeX = sommeX + Coin.getX();
                         sommeY = sommeY + Coin.getY();
                     }
-                    piece.setCentreX(sommeX/(double)Sol.getCoins().size());
-                    piece.setCentreY(sommeY/(double)Sol.getCoins().size());
+                    piece.setCentreX(sommeX/(double)Sol.getCoins().size()); //Calcul du centre de la pièce en x
+                    piece.setCentreY(sommeY/(double)Sol.getCoins().size()); //Calcul du centre de la pièce en y
                     piece.setPlafond(Plafond);
                     piece.setSol(Sol);
                     niveauActuel.addPiece(piece);
@@ -627,7 +678,6 @@ public class Controleur {
     public void AjoutAppartement(double x, double y){
         Piece PieceProche = null;
         double minDistance = Double.MAX_VALUE; // Intialisation d'un max qui sera mis à jour à chaque fois
-        //String selectedAppart = this.vue.getChoixAppart().getValue();
         
         // Récupérer l'élément sélectionné dans le ComboBox
         HBox selectedHBox = this.vue.getChoixAppart().getValue();
@@ -726,7 +776,7 @@ public class Controleur {
 
         for (String[] revêtement : revêtementsMur) {
             RadioButton radioButton = new RadioButton("Désignation: " + revêtement[1] + ", Prix: " + revêtement[2] + "€/m2");
-            radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID en tant que donnée utilisateur
+            radioButton.setUserData(Integer.parseInt(revêtement[0])); // Stocker l'ID 
             radioButton.setToggleGroup(group);
             vbox.getChildren().add(radioButton);
         }
@@ -863,8 +913,15 @@ public class Controleur {
     public void redessiner() {
         // Récupérer la chaîne sélectionnée dans la ComboBox
         String selectedNiveau = this.vue.getCbNiveaux().getValue();
-        // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
-        int niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
+        int niveauIndex = 0;
+        if (selectedNiveau != null){
+            // Extraire l'index du niveau à partir de la chaîne (par exemple, "Niveau 0" devient 0)
+            niveauIndex = Integer.parseInt(selectedNiveau.replace("Niveau ", ""));
+        }
+        else {
+            niveauIndex = 0;
+        }
+        
         GraphicsContext gc = vue.getcDessin().getRealCanvas().getGraphicsContext2D();
         gc.clearRect(0, 0, vue.getcDessin().getRealCanvas().getWidth(), vue.getcDessin().getRealCanvas().getHeight());  // Efface le contenu précédent
         gc.setFill(Color.WHITE);
@@ -923,7 +980,329 @@ public class Controleur {
         
     
         }
+    
+    public static Batiment chargerBatiment(File fichier) {
+        Batiment batiment = null;
+        Map<Integer, Niveau> niveaux = new HashMap<>();
+        Map<Integer, Coin> coins = new HashMap<>();
+        Map<Integer, Piece> pieces = new HashMap<>();
+        Map<Integer, Appartement> appartements = new HashMap<>();
+        Map<Integer, Revetements> revetements = new HashMap<>();
+        Map<Integer, Mur> murs = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Batiment")) {
+                    batiment = parseBatiment(line);
+                } else if (line.startsWith("Niveau")) {
+                    Niveau niveau = parseNiveau(line);
+                    niveaux.put(niveau.getId(), niveau);
+                } else if (line.startsWith("Mur")) {
+                    Mur mur = parseMur(line, coins);
+                    murs.put(mur.getId(), mur);
+                } else if (line.startsWith("Coin")) {
+                    Coin coin = parseCoin(line);
+                    coins.put(coin.getId(), coin);
+                } else if (line.startsWith("Piece")) {
+                        Piece piece = parsePiece(line, coins, murs);
+                        pieces.put(piece.getId(), piece);
+                } else if (line.startsWith("Plafond")) {
+                    Plafond plafond = parsePlafond(line, coins);
+                    pieces.get(plafond.getIdPiece()).setPlafond(plafond);
+                } else if (line.startsWith("Sol")) {
+                    Sol sol = parseSol(line, coins);
+                    pieces.get(sol.getIdPiece()).setSol(sol);
+                } else if (line.startsWith("Appartement")) {
+                    Appartement appartement = parseAppartement(line);
+                    appartements.put(appartement.getId(), appartement);
+                } else if (line.startsWith("Revetements")) {
+                    Revetements revetement = parseRevetement(line);
+                    revetements.put(revetement.getId(), revetement);
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(niveaux.get(0));
+        for(Mur murs2 : murs.values()){
+            int idNiveau = murs2.getIdNiveau();
+            niveaux.get(idNiveau).addMur(murs2);
+            Coin Coin1 = murs2.getCoinDebut();
+            Coin Coin2 = murs2.getCoinFin();
+            niveaux.get(idNiveau).addCoin(Coin2);
+            niveaux.get(idNiveau).addCoin(Coin1);
+            }
+        
+        for (Piece piece : pieces.values()){
+            if (batiment.getType().equals("Immeuble")){
+                int idAppart = piece.getIdAppartement();
+                appartements.get(idAppart).AjouterPiece(piece);
+            }
+            double sommeX = 0;
+            double sommeY = 0;
+            for (Coin Coin : piece.getSol().getCoins()){
+                sommeX = sommeX + Coin.getX();
+                sommeY = sommeY + Coin.getY();
+            }
+            piece.setCentreX(sommeX/(double)piece.getSol().getCoins().size()); //Calcul du centre de la pièce en x
+            piece.setCentreY(sommeY/(double)piece.getSol().getCoins().size()); //Calcul du centre de la pièce en y
+            int idNiveau = piece.getListeMurs().getFirst().getIdNiveau();
+            niveaux.get(idNiveau).addPiece(piece);
+        }
+        if (batiment.getType().equals("Immeuble")){   
+            for (Appartement appart : appartements.values()){
+                int idNiveau = appart.getNiveau();
+                niveaux.get(idNiveau).AjouterAppartement(appart);
+            }
+        }
+        // Ajouter les niveaux au bâtiment
+        if (batiment != null) {
+            for (Niveau niveau : niveaux.values()) {
+                batiment.AjouterNiveau(niveau);
+                batiment.setNbNiveaux(niveaux.values().size());
+            }
+            batiment.setListeRevets(revetements);
+            
+        }
+        return batiment;
     }
+
+    private static Batiment parseBatiment(String line) {
+        // Supprimer la partie "ListeNiveaux={...}" de la ligne
+        int startIndexOfLevels = line.indexOf("ListeNiveaux={");
+        int endIndexOfLevels = line.indexOf("}", startIndexOfLevels);
+        String lineWithoutLevels = line.substring(0, startIndexOfLevels) + line.substring(endIndexOfLevels + 1);
+
+        // Extraire les informations restantes de la ligne
+        String[] parts = lineWithoutLevels.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        String type = parts[2].split("=")[1];
+        if (parts[3].endsWith("}")) {
+            parts[3] = parts[3].substring(0, parts[3].length() - 1);
+        }
+        String nom = parts[3].split("=")[1];
+
+        // Créer et retourner l'objet Batiment
+        Batiment bat = new Batiment(type, nom);
+        bat.setId(id);
+        System.out.print(bat);
+        return bat;
+    }
+
+    private static Niveau parseNiveau(String line) {
+        // Example: Niveau{id=1, ListeAppartements={1, 2}}
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        Niveau niv = new Niveau();
+        niv.setId(id);
+        System.out.println(niv);
+        return niv;
+    }
+
+    private static Mur parseMur(String line, Map<Integer, Coin> coins) {
+        // Example: Mur{id=1, coinDebut=1, coinFin=2, nbPortes=2, nbFenetres=1, hauteur=2.0, IdRevetement=2}
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        int idCoinDeb = Integer.parseInt(parts[1].split("=")[1]);
+        int idCoinFin = Integer.parseInt(parts[2].split("=")[1]);
+        int nbPortes = Integer.parseInt(parts[3].split("=")[1]);
+        int nbFenetres = Integer.parseInt(parts[4].split("=")[1]);
+        double hauteur = Double.parseDouble(parts[5].split("=")[1]);
+        int idRevetement = Integer.parseInt(parts[6].split("=")[1]);
+        // Supprimer les accolades à la fin de la chaîne si elles existent
+        if (parts[7].endsWith("}")) {
+            parts[7] = parts[7].substring(0, parts[7].length() - 1);
+        }
+        int idNiveau = Integer.parseInt(parts[7].split("=")[1]);
+        Coin coinDebut = null;
+        Coin coinFin = null;
+        for (Coin coin : coins.values()){
+            if (coin.getId()==idCoinDeb){
+                coinDebut = coin;
+            }
+            if (coin.getId()==idCoinFin){
+                coinFin = coin;
+            }
+        }
+        Mur mur = new Mur(coinDebut,coinFin,hauteur);
+        mur.setIdRevetement(idRevetement);
+        mur.setNbFenetres(nbFenetres);
+        mur.setNbPortes(nbPortes);
+        mur.setIdNiveau(idNiveau);
+        System.out.println(mur);
+        return mur;
+    }
+
+    private static Coin parseCoin(String line) {
+        // Example: Coin{id=1, x=60.0, y=60.0}
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        double x = Double.parseDouble(parts[1].split("=")[1]);
+        // Supprimer les accolades à la fin de la chaîne si elles existent
+    if (parts[2].endsWith("}")) {
+        parts[2] = parts[2].substring(0, parts[2].length() - 1);
+        }
+        double y = Double.parseDouble(parts[2].split("=")[1]);
+        Coin coin =new Coin(x, y);
+        coin.setId(id);
+        System.out.println(coin);
+        return coin;
+    }
+
+    private static Piece parsePiece(String line, Map<Integer, Coin> coins, Map<Integer, Mur> murs) {
+        
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        System.out.println(id);
+        int idAppartement = Integer.parseInt(parts[1].split("=")[1]);
+        List<Integer> ListeMurs = parseMurIds(parts[4].split("=")[1]);
+        Piece piece = new Piece();
+        for (Map.Entry<Integer, Mur> Mur : murs.entrySet()){
+            for (int MurId : ListeMurs){
+                if (MurId == Mur.getValue().getId()){
+                    piece.AjouterMur(Mur.getValue());
+                }
+            }
+            
+        }
+
+        
+        piece.setIdAppartement(idAppartement);
+        piece.setId(id);
+        //System.out.println(piece.getListeMurs());
+        //System.out.println(piece.getId());
+        return piece;
+    }
+
+    private static Plafond parsePlafond(String line, Map<Integer, Coin> coins) {
+        // Example: Plafond{id=1, Coins={1, 4, 2, 3}, IdRevetement=1}
+        String[] parts = line.split(", ");
+        System.out.println(parts[2].split("=")[0]);
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        List<Integer> coinList = parseCoinIds(parts[1].split("=")[1]);
+        int idRevetement = Integer.parseInt(parts[2].split("=")[1]);
+        if (parts[3].endsWith("}")) {
+        parts[3] = parts[3].substring(0, parts[3].length() - 1);
+        }
+        int idPiece = Integer.parseInt(parts[3].split("=")[1]);
+        Plafond plafond = new Plafond();
+        for (Map.Entry<Integer, Coin> coinsTest : coins.entrySet()){
+            for (int coinsId : coinList){
+                if (coinsId == coinsTest.getValue().getId()){
+                    plafond.AjouterCoin(coinsTest.getValue());
+                }
+            }
+            
+        }
+        System.out.println(plafond.getCoins());
+        plafond.setIdRevetement(idRevetement);
+        plafond.setId(id);
+        plafond.setIdPiece(idPiece);
+        System.out.println(plafond);
+        return plafond;
+    }
+
+    private static Sol parseSol(String line, Map<Integer, Coin> coins) {
+        // Example: Sol{id=1, Coins={1, 4, 2, 3}, IdRevetement=2}
+        String[] parts = line.split(", ");
+        System.out.println(parts.length);
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        List<Integer> coinList = parseCoinIds(parts[1].split("=")[1]);
+        int idRevetement = Integer.parseInt(parts[2].split("=")[1]);
+        if (parts[3].endsWith("}")) {
+        parts[3] = parts[3].substring(0, parts[3].length() - 1);
+        }
+        int idPiece = Integer.parseInt(parts[3].split("=")[1]);
+        Sol sol = new Sol();
+        for (Map.Entry<Integer, Coin> coinsTest : coins.entrySet()){
+            for (int coinsId : coinList){
+                if (coinsId == coinsTest.getValue().getId()){
+                    sol.AjouterCoin(coinsTest.getValue());
+                }
+            } 
+        }
+        sol.setIdPiece(id);
+        sol.setIdRevetement(idRevetement);
+        sol.setId(id);
+        System.out.println(sol);
+        return sol;
+    }
+
+    
+
+    private static Appartement parseAppartement(String line) {
+        // Example: Appartement{id=1, niveau=0, ListePieces=[Piece{id=1, idAppartement=1, sol=Sol{id=1, Coins={1, 4, 2, 3}, IdRevetement=2}, plafond=Plafond{id=1, Coins={1, 4, 2, 3}, IdRevetement=1}, Murs={1, 2, 3, 4}}]}
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        // Supprimer les accolades à la fin de la chaîne si elles existent
+        if (parts[1].endsWith("}")) {
+            parts[1] = parts[1].substring(0, parts[1].length() - 1);
+        }
+        int niveau = Integer.parseInt(parts[1].split("=")[1]);
+        
+        // Parsing Pieces should be done separately
+        Appartement appart = new Appartement(niveau);
+        appart.setId(id);
+        System.out.println(appart);
+        return appart;
+    }
+
+    private static Revetements parseRevetement(String line) {
+        // Example: Revetements{id=1, designation=Peinture, pourMur=true, pourSol=false, pourPlafond=true, Prixunitaire=10.95}
+        String[] parts = line.split(", ");
+        int id = Integer.parseInt(parts[0].split("=")[1]);
+        String designation = parts[1].split("=")[1];
+        boolean pourMur = Boolean.parseBoolean(parts[2].split("=")[1]);
+        boolean pourSol = Boolean.parseBoolean(parts[3].split("=")[1]);
+        boolean pourPlafond = Boolean.parseBoolean(parts[4].split("=")[1]);
+        double prixUnitaire = Double.parseDouble(parts[5].split("=")[1]);
+        // Supprimer les accolades à la fin de la chaîne si elles existent
+        if (parts[6].endsWith("}")) {
+            parts[6] = parts[6].substring(0, parts[6].length() - 1);
+        }
+        int echelle = Integer.parseInt(parts[6].split("=")[1]);
+        
+        return new Revetements(id, designation, pourMur, pourSol, pourPlafond, prixUnitaire, echelle);
+    }
+    
+    private static List<Integer> parseCoinIds(String coinStr) {
+    coinStr = coinStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
+    String[] coinIds = coinStr.replace("Coins={", "").replace("}", "").split(",");
+    List<Integer> coinIdList = new ArrayList<>();
+    for (String coinId : coinIds) {
+        coinIdList.add(Integer.parseInt(coinId)); // Assure-toi de supprimer les espaces en trop
+    }
+    //System.out.print(coinIdList);
+    return coinIdList;
+}
+    
+    private static List<Integer> parseMurIds(String murStr) {
+    // Example: Murs={1, 2, 3, 4}
+    //System.out.print(murStr);
+    murStr = murStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
+    String[] murIds = murStr.replace("Murs={", "").replace("}", "").split(",");
+    //System.out.println(Arrays.toString(murIds));
+    List<Integer> murIdList = new ArrayList<>();
+    for (String murId : murIds) {
+        murIdList.add(Integer.parseInt(murId));
+    }
+    return murIdList;
+}
+
+    public void setdBatiment(Donnees<Batiment> dBatiment) {
+        this.dBatiment = dBatiment;
+    }
+
+
+    
+    
+}
+
+
+    
+
+    
                 
                
                 

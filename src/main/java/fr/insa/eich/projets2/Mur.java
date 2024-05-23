@@ -18,7 +18,7 @@ public class Mur {
     private int nbPortes;
     private int nbFenetres;
     private int IdRevetement;
-   
+    private int IdNiveau;
 
     public Mur(Coin coinDebut, Coin coinFin, double hauteur) {
         compteurId++;
@@ -83,7 +83,7 @@ public class Mur {
 
     @Override
     public String toString() {
-        return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut.getId() + ", coinFin=" + coinFin.getId() + ", nbPortes=" + nbPortes + ", nbFenetres=" + nbFenetres + ", hauteur=" + hauteur + ", IdRevetement=" + IdRevetement + '}';
+        return "Mur{" + "id=" + id + ", coinDebut=" + coinDebut.getId() + ", coinFin=" + coinFin.getId() + ", nbPortes=" + nbPortes + ", nbFenetres=" + nbFenetres + ", hauteur=" + hauteur + ", IdRevetement=" + IdRevetement + ", IdNiveau=" + IdNiveau +'}';
     }
 
   public double calculSurface(){
@@ -146,6 +146,14 @@ public class Mur {
 
     public void setNbFenetres(int nbFenetres) {
         this.nbFenetres = nbFenetres;
+    }
+
+    public int getIdNiveau() {
+        return IdNiveau;
+    }
+
+    public void setIdNiveau(int IdNiveau) {
+        this.IdNiveau = IdNiveau;
     }
     
     

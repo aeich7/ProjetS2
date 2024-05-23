@@ -12,6 +12,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+import fr.insa.eich.projets2.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.io.File;
+
 
 /**
  *
@@ -38,7 +43,13 @@ public class MainPane extends BorderPane{
     
     private MenuItem newItem;
     private MenuItem SaveItem;
+    private MenuItem Charger;
     private MenuItem CalculItem;
+     private MenuItem DevisItem;
+    private MenuItem AutreItem;
+    private MenuItem EchelleItem; 
+    private MenuItem EcoleItem; 
+    private MenuItem ElevesItem; 
     
     private RadioButton rbCoins;
     private RadioButton rbMurs;
@@ -62,6 +73,66 @@ public class MainPane extends BorderPane{
         this.newItem = new MenuItem("Nouveau projet");
         this.SaveItem = new MenuItem("Sauvegarder");
         this.CalculItem = new MenuItem("Devis");
+        this.Charger = new MenuItem("Charger");
+        
+        this.DevisItem = new MenuItem("Devis");
+        this.AutreItem = new MenuItem("Autre");
+        this.EchelleItem = new MenuItem("Echelle");
+        this.ElevesItem = new MenuItem("Eleves");
+        this.EcoleItem = new MenuItem("Ecole");
+        
+        DevisItem.setOnAction(t ->{
+            this.controleur.Aide_devis();
+        });
+        EchelleItem.setOnAction(t ->{
+           this.controleur.Aide_échelle(); 
+        });
+        AutreItem.setOnAction(t ->{
+            this.controleur.Aide_autre();
+        });
+        EcoleItem.setOnAction(t -> {
+            this.controleur.Creditsecole(); 
+        });
+        ElevesItem.setOnAction(t -> {
+            this.controleur.Creditseleves();
+        });
+        
+        Charger.setOnAction(e -> {
+            // Créer un sélecteur de fichier
+            FileChooser fileChooser = new FileChooser();
+        
+            // Configurer le titre de la boîte de dialogue
+            fileChooser.setTitle("Choisir un fichier");
+        
+            // Ajouter un filtre pour les fichiers .txt
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Fichiers texte (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().add(extFilter);
+        
+            // Ouvrir la boîte de dialogue pour choisir un fichier
+            Stage stage = new Stage();
+            File selectedFile = fileChooser.showOpenDialog(stage);
+        
+            Donnees<Batiment> dbatiment = new Donnees<Batiment>();
+            dbatiment.setCurrentData(this.controleur.chargerBatiment(selectedFile));
+            this.controleur.setdBatiment(dbatiment);
+            if (this.controleur.getdBatiment().getCurrentData().getType().equals("Immeuble")){
+                this.rbAppartement.setVisible(true);
+                this.rbAppartement.setDisable(false);
+                this.choixAppart.setVisible(true);
+                this.choixAppart.setDisable(false);
+            }
+            this.controleur.updateNiveaux();
+            this.controleur.changeEtat(10);
+            this.controleur.redessiner();
+            this.controleur.getVue().getcDessin().setControleur(this.controleur.getVue().getControleur());
+        });
+            
+        EcoleItem.setOnAction(t -> {
+            this.controleur.Creditsecole(); 
+        });
+        ElevesItem.setOnAction(t -> {
+            this.controleur.Creditseleves();
+        });
         
         this.rbCoins = new RadioButton("Coins");
         rbCoins.setOnAction(e ->{
@@ -103,15 +174,21 @@ public class MainPane extends BorderPane{
 
         this.choixAppart = new ComboBox<>();
         this.choixAppart.setPromptText("Sélectionnez un appartement");
-        
+       
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
-        mFichier.getItems().addAll(newItem,CalculItem,SaveItem);// Sous-menus de fichier
+        mFichier.getItems().addAll(newItem,CalculItem,SaveItem,Charger);// Sous-menus de fichier
         newItem.setOnAction(t ->{
             this.controleur.NouveauProjet();
         });
         CalculItem.setOnAction(t -> {
             this.controleur.getdBatiment().getCurrentData().CalculDevis();
         });
+        SaveItem.setOnAction(t ->{
+            this.controleur.getdBatiment().getCurrentData().sauvegarderBatiment();
+        });
+        
+        mAide.getItems().addAll(DevisItem,EchelleItem ,AutreItem);
+        mCredits.getItems().addAll(EcoleItem,ElevesItem);
         this.vbHaut = new VBox(menubar);
         this.setTop(vbHaut);
         

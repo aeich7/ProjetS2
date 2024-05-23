@@ -10,7 +10,7 @@ package fr.insa.eich.projets2;
 
 public  class Immeuble extends Batiment {
     public Immeuble() {
-        super("Immeuble");
+        super("Immeuble",",nom");
              }
      }
 

@@ -10,7 +10,7 @@ package fr.insa.eich.projets2;
  */
 public class Maison extends Batiment{
     public Maison(){
-        super("maison");
+        super("Maison", "nom");
                 }
     
 }

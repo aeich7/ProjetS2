@@ -205,7 +205,7 @@ public class Revetements {
 
     @Override
     public String toString() {
-        return "Revetements{" + "id=" + id + ", designation=" + designation + ", pourMur=" + pourMur + ", pourSol=" + pourSol + ", pourPlafond=" + pourPlafond + ", Prixunitaire=" + Prixunitaire + '}';
+        return "Revetements{" + "id=" + id + ", designation=" + designation + ", pourMur=" + pourMur + ", pourSol=" + pourSol + ", pourPlafond=" + pourPlafond + ", Prixunitaire=" + Prixunitaire + ", echelle=" + echelle +'}';
     }
   
     public static Map<Integer,Revetements> creerRevetements(String[][] tableau, int echelle) {
