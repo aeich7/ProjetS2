@@ -230,7 +230,7 @@ public class Controleur {
     public void Aide_devis(){
             Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
             alert1.getDialogPane().setMinWidth(400); // Configuration de la taille de la fenêtre d'alerte 
-            alert1.getDialogPane().setMinHeight(200);
+            alert1.getDialogPane().setMinHeight(150);
             alert1.setTitle("Aide pour le devis");
             alert1.setHeaderText(null);
             alert1.setContentText("Pour calculer le devis de toutes les pièces que vous avez construites ou allez construire, il faudra aller dans le menu 'Fichier' puis appuyer sur le bouton 'Devis', sinon votre devis ne sera pas calculé ! ");
@@ -263,6 +263,15 @@ public class Controleur {
             alert.setContentText("Créé par Eich Aurélien le boss, Merckling Bruno et Kerloc'h Hotalu");
             alert.showAndWait();
     }
+    public void Aide_échelle(){
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getDialogPane().setMinWidth(200); 
+            alert.getDialogPane().setMinHeight(100);
+            alert.setTitle("Aide pour l'échelle");
+            alert.setHeaderText(null);
+            alert.setContentText("La distance entre deux points sur le plan représente un mètre ! ");
+            alert.showAndWait();
+}
     public void ActivCoinDrawMode() { // Activer le mode de Dessin des coins
         drawMode = true;
     }
