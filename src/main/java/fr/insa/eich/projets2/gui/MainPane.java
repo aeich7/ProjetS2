@@ -41,6 +41,7 @@ public class MainPane extends BorderPane{
     private MenuItem CalculItem;
     private MenuItem DevisItem;
     private MenuItem AutreItem;
+    private MenuItem EchelleItem; 
     private MenuItem EcoleItem; 
     private MenuItem ElevesItem; 
     
@@ -68,6 +69,7 @@ public class MainPane extends BorderPane{
         this.CalculItem = new MenuItem("Devis");
         this.DevisItem = new MenuItem("Devis");
         this.AutreItem = new MenuItem("Autre");
+        this.EchelleItem = new MenuItem("Echelle");
         this.ElevesItem = new MenuItem("Eleves");
         this.EcoleItem = new MenuItem("Ecole");
         
@@ -116,7 +118,7 @@ public class MainPane extends BorderPane{
         
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
         mFichier.getItems().addAll(newItem,CalculItem,SaveItem);// Sous-menus de fichier
-        mAide.getItems().addAll(DevisItem, AutreItem);
+        mAide.getItems().addAll(DevisItem,EchelleItem ,AutreItem);
         mCredits.getItems().addAll(EcoleItem,ElevesItem);
         newItem.setOnAction(t ->{
             this.controleur.NouveauProjet();
@@ -126,6 +128,9 @@ public class MainPane extends BorderPane{
         });
         DevisItem.setOnAction(t ->{
             this.controleur.Aide_devis();
+        });
+        EchelleItem.setOnAction(t ->{
+           this.controleur.Aide_échelle(); 
         });
         AutreItem.setOnAction(t ->{
             this.controleur.Aide_autre();
