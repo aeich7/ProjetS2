@@ -59,7 +59,16 @@ public class Appartement {
 
     @Override
     public String toString() {
-        return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", ListePieces=" + ListePieces + '}';
+        String PieceIds = "Pieces={";
+        for (Piece piece : ListePieces) {
+            PieceIds += piece.getId() + ",";
+        }
+        if (!ListePieces.isEmpty()) {
+            PieceIds = PieceIds.substring(0, PieceIds.length() - 1); // Supprimer la virgule et l'espace en trop à la fin
+        }
+        PieceIds += "}";
+        
+        return "Appartement{" + "id=" + id + ", niveau=" + niveau + ", " + PieceIds + '}';
     }
     
     public String toComboBox(){ // Pour l'affichage dans le ComboBox

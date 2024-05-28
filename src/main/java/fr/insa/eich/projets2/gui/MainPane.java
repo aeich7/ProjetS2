@@ -3,19 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.eich.projets2.gui;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import fr.insa.eich.projets2.*;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import java.io.File;
+import static fr.insa.eich.projets2.Revetements.*;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 
 /**
@@ -98,34 +103,79 @@ public class MainPane extends BorderPane{
         });
         
         Charger.setOnAction(e -> {
-            // Créer un sélecteur de fichier
+        // Créer une nouvelle fenêtre
+        Stage selectionWindow = new Stage();
+        selectionWindow.setTitle("Sélectionner les fichiers");
+
+        // Bouton pour sélectionner le fichier du bâtiment
+        Button selectBuildingFileButton = new Button("Sélectionner le fichier du bâtiment");
+        Button selectRevetementFileButton = new Button("Sélectionner le fichier des revêtements");
+        selectBuildingFileButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
-        
-            // Configurer le titre de la boîte de dialogue
-            fileChooser.setTitle("Choisir un fichier");
-        
-            // Ajouter un filtre pour les fichiers .txt
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Fichiers texte (*.txt)", "*.txt");
-            fileChooser.getExtensionFilters().add(extFilter);
-        
-            // Ouvrir la boîte de dialogue pour choisir un fichier
-            Stage stage = new Stage();
-            File selectedFile = fileChooser.showOpenDialog(stage);
-        
-            Donnees<Batiment> dbatiment = new Donnees<Batiment>();
-            dbatiment.setCurrentData(this.controleur.chargerBatiment(selectedFile));
-            this.controleur.setdBatiment(dbatiment);
-            if (this.controleur.getdBatiment().getCurrentData().getType().equals("Immeuble")){
-                this.rbAppartement.setVisible(true);
-                this.rbAppartement.setDisable(false);
-                this.choixAppart.setVisible(true);
-                this.choixAppart.setDisable(false);
+            fileChooser.setTitle("Sélectionner le fichier du bâtiment");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers Texte", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(selectionWindow);
+            if (selectedFile != null) {
+                Donnees<Batiment> dbatiment = new Donnees<Batiment>();
+                dbatiment.setCurrentData(this.controleur.chargerBatiment(selectedFile));
+                this.controleur.setdBatiment(dbatiment);
+
+                if (this.controleur.getdBatiment().getCurrentData().getType().equals("Immeuble")) {
+                    this.rbAppartement.setVisible(true);
+                    this.rbAppartement.setDisable(false);
+                    this.choixAppart.setVisible(true);
+                    this.choixAppart.setDisable(false);
+                }
+                selectBuildingFileButton.setDisable(true);
+                selectBuildingFileButton.setText("Fichier chargé");
+                this.controleur.updateNiveaux();
+                this.controleur.updateChoixAppart(0);
+                this.controleur.changeEtat(10);
+                this.controleur.redessiner();
+                this.controleur.getVue().getcDessin().setControleur(this.controleur.getVue().getControleur());
             }
-            this.controleur.updateNiveaux();
-            this.controleur.changeEtat(10);
-            this.controleur.redessiner();
-            this.controleur.getVue().getcDessin().setControleur(this.controleur.getVue().getControleur());
+             if (selectBuildingFileButton.isDisable()&& selectRevetementFileButton.isDisable()){
+                selectionWindow.close();
+            }
+            
         });
+
+        // Action du bouton pour sélectionner le fichier des revêtements
+        
+        selectRevetementFileButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Sélectionner le fichier des revêtements");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers Texte", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(selectionWindow);
+            if (selectedFile != null) {
+                int lignes = Comptageligne(selectedFile.getAbsolutePath());
+                String[][] contenu = new String[lignes][6];
+                contenu = Tableau(selectedFile.getAbsolutePath(), contenu);
+                String [][] revetements = contenu;
+                this.controleur.setRevetements(revetements);    
+                this.controleur.setRevetsPourMur(mur(revetements));
+                this.controleur.setRevetsPourPlafond(plafond(revetements));
+                this.controleur.setRevetsPourSol(sol(revetements));
+                selectRevetementFileButton.setDisable(true);
+                selectRevetementFileButton.setText("Fichier chargé");
+            }
+            if (selectBuildingFileButton.isDisable()&& selectRevetementFileButton.isDisable()){
+                selectionWindow.close();
+            }
+        });
+        // Disposition de la nouvelle fenêtre
+        VBox layout = new VBox(10, selectBuildingFileButton, selectRevetementFileButton);
+        layout.setPadding(new Insets(10));
+        Scene scene = new Scene(layout, 400, 200);
+        selectionWindow.setScene(scene);
+
+        // Afficher la nouvelle fenêtre
+        selectionWindow.initModality(Modality.APPLICATION_MODAL);
+        selectionWindow.showAndWait();
+        });
+    
+        
+        
             
         EcoleItem.setOnAction(t -> {
             this.controleur.Creditsecole(); 
@@ -134,7 +184,7 @@ public class MainPane extends BorderPane{
             this.controleur.Creditseleves();
         });
         
-        this.rbCoins = new RadioButton("Coins");
+        this.rbCoins = createStyledRadioButton("Coins");
         rbCoins.setOnAction(e ->{
             this.controleur.ActivCoinDrawMode();
             this.controleur.DesactivWallMode();
@@ -142,7 +192,7 @@ public class MainPane extends BorderPane{
             this.controleur.DesactivAppartementMode();
             this.choixAppart.setDisable(true);
         });
-        this.rbMurs = new RadioButton("Murs");
+        this.rbMurs = createStyledRadioButton("Murs");
         rbMurs.setOnAction(a ->{
             this.controleur.ActivWallMode();
             this.controleur.DesactivCoinDrawMode();
@@ -151,7 +201,7 @@ public class MainPane extends BorderPane{
             this.choixAppart.setDisable(true);
         });
 
-        this.rbPieces= new RadioButton("Piece");
+        this.rbPieces= createStyledRadioButton("Piece");
         rbPieces.setOnAction(a ->{
             this.controleur.DesactivCoinDrawMode();
             this.controleur.DesactivWallMode();
@@ -160,7 +210,7 @@ public class MainPane extends BorderPane{
             this.choixAppart.setDisable(true);
         });
         
-        this.rbAppartement = new RadioButton("Appartement");
+        this.rbAppartement = createStyledRadioButton("Appartement");
         rbAppartement.setOnAction(a -> {
             this.controleur.DesactivCoinDrawMode();
             this.controleur.DesactivWallMode();
@@ -171,14 +221,17 @@ public class MainPane extends BorderPane{
         
         this.cbNiveaux = new ComboBox<>(); // Initialisation de ComboBox des niveaux
         this.cbNiveaux.setPromptText("Sélectionnez un niveau");
-
+        this.cbNiveaux.setStyle("-fx-font-size: 14px; -fx-pref-width: 200px;");
         this.choixAppart = new ComboBox<>();
         this.choixAppart.setPromptText("Sélectionnez un appartement");
-       
+        this.choixAppart.setStyle("-fx-font-size: 14px; -fx-pref-width: 200px;");
+        
+        
         menubar.getMenus().addAll(mFichier,mAide,mCredits);// Création de la barre de Menus
         mFichier.getItems().addAll(newItem,CalculItem,SaveItem,Charger);// Sous-menus de fichier
         newItem.setOnAction(t ->{
             this.controleur.NouveauProjet();
+            this.Charger.setDisable(true);
         });
         CalculItem.setOnAction(t -> {
             this.controleur.getdBatiment().getCurrentData().CalculDevis();
@@ -192,7 +245,7 @@ public class MainPane extends BorderPane{
         this.vbHaut = new VBox(menubar);
         this.setTop(vbHaut);
         
-        ToggleGroup Options = new ToggleGroup(); // Faire en sorte que seulement un des boutons puisse être sélectionné à la fois (Coins OU Murs OU Pieces)
+        ToggleGroup Options = new ToggleGroup(); // Faire en sorte que seulement un des boutons puisse être sélectionné à la fois (Coins OU Murs OU Pieces etc)
         
         rbCoins.setToggleGroup(Options);
         rbMurs.setToggleGroup(Options);
@@ -204,7 +257,7 @@ public class MainPane extends BorderPane{
         this.choixAppart.setDisable(true);
         
         this.vbDroit = new VBox(cbNiveaux,rbCoins, rbMurs, rbPieces,rbAppartement, choixAppart);
-        vbDroit.setStyle("-fx-background-color: lightblue;");
+        vbDroit.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1px;");
         this.setRight(vbDroit);
         this.controleur.changeEtat(0);
     }
@@ -265,7 +318,11 @@ public class MainPane extends BorderPane{
         return CalculItem;
     }
     
-    
+     private RadioButton createStyledRadioButton(String text) {
+        RadioButton rb = new RadioButton(text);
+        rb.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
+        return rb;
+    }
    
     
     

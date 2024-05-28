@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.io.File;
+import java.awt.Desktop;
 /**
  *
  * @author arbre
@@ -126,28 +127,43 @@ public class  Batiment {
             }
         }
         double PrixBat = 0;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter ("Devis.txt"))) {
-        for (Map.Entry<Integer, Revetements> infos : this.getListeRevets().entrySet()){
-            writer.newLine();
-            writer.write("Revêtement numéro : "+infos.getValue().getId()+" .");
-            writer.write("Désignation : "+infos.getValue().getDesignation()+" .");
-            writer.write("Surface totale : "+infos.getValue().getSurfaceTot()+"m2.");
-            writer.write("Prix total : "+infos.getValue().getPrixTot()+"€.");
-            PrixBat = PrixBat + infos.getValue().getPrixTot();
-            StringBuilder ligneDeTirets = new StringBuilder();
-            for (int i = 0; i < 50; i++) {
-                ligneDeTirets.append("-");
+         File devisFile = new File("Devis.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(devisFile))) {
+            for (Map.Entry<Integer, Revetements> infos : this.getListeRevets().entrySet()) {
+                writer.newLine();
+                writer.write("Revêtement numéro : " + infos.getValue().getId() + " .");
+                writer.write("Désignation : " + infos.getValue().getDesignation() + " .");
+                writer.write("Surface totale : " + infos.getValue().getSurfaceTot() + "m2.");
+                writer.write("Prix total : " + infos.getValue().getPrixTot() + "€.");
+                PrixBat += infos.getValue().getPrixTot();
+                StringBuilder ligneDeTirets = new StringBuilder();
+                for (int i = 0; i < 50; i++) {
+                    ligneDeTirets.append("-");
+                }
+                writer.newLine();
+                writer.write(ligneDeTirets.toString());
             }
             writer.newLine();
-            writer.write(ligneDeTirets.toString());
+            writer.newLine();
+            writer.write("Prix total du batiment : " + PrixBat + "€.");
+        } catch (IOException e) {
+            System.err.println("Une erreur est survenue lors de l'écriture dans le fichier.");
         }
-        writer.newLine(); 
-        writer.newLine();
-        writer.write("Prix total du batiment : "+PrixBat+"€.");
-        }catch (IOException e){
-                System.err.println("Une erreur est survenue lors de l'écriture dans le fichier ");
-                }
+
+        // Ouvrir le fichier Devis.txt
+        if (Desktop.isDesktopSupported() && devisFile.exists()) {
+            try {
+                Desktop.getDesktop().open(devisFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Desktop non supporté ou fichier inexistant.");
         }
+    
+    }
+        
     
     
         public void sauvegarderBatiment() {
@@ -158,7 +174,7 @@ public class  Batiment {
             writer.write(this.toString());
             writer.newLine();
 
-        for (int i = 0; i < nbNiveaux; i++) {
+            for (int i = 0; i < nbNiveaux; i++) {
             writer.write(this.getListeNiveaux().get(i).toString());
             writer.newLine();
             
@@ -204,8 +220,16 @@ public class  Batiment {
     } catch (IOException e) {
         e.printStackTrace();
     }
-}
- 
+            if (Desktop.isDesktopSupported() && file.exists()) {
+            try {
+                Desktop.getDesktop().open(file.getAbsoluteFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Le fichier a été enregistré dans : "+file.getAbsolutePath());
+       
         
     }
+}
+}
 

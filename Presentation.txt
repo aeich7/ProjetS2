@@ -1,0 +1,274 @@
+Batiment{id=1, ListeNiveaux={1, 2, 3}, type=Immeuble, nom=Presentation}
+Niveau{id=1, ListeAppartements={1, 2}}
+Coin{id=2, x=240.0, y=30.0}
+Coin{id=1, x=30.0, y=30.0}
+Coin{id=4, x=240.0, y=180.0}
+Coin{id=2, x=240.0, y=30.0}
+Coin{id=4, x=240.0, y=180.0}
+Coin{id=5, x=240.0, y=120.0}
+Coin{id=1, x=30.0, y=30.0}
+Coin{id=3, x=30.0, y=180.0}
+Coin{id=4, x=240.0, y=180.0}
+Coin{id=3, x=30.0, y=180.0}
+Coin{id=6, x=510.0, y=120.0}
+Coin{id=5, x=240.0, y=120.0}
+Coin{id=7, x=510.0, y=180.0}
+Coin{id=6, x=510.0, y=120.0}
+Coin{id=4, x=240.0, y=180.0}
+Coin{id=7, x=510.0, y=180.0}
+Coin{id=8, x=390.0, y=30.0}
+Coin{id=2, x=240.0, y=30.0}
+Coin{id=9, x=390.0, y=120.0}
+Coin{id=8, x=390.0, y=30.0}
+Coin{id=6, x=510.0, y=120.0}
+Coin{id=9, x=390.0, y=120.0}
+Coin{id=10, x=510.0, y=30.0}
+Coin{id=6, x=510.0, y=120.0}
+Coin{id=8, x=390.0, y=30.0}
+Coin{id=10, x=510.0, y=30.0}
+Coin{id=11, x=240.0, y=330.0}
+Coin{id=4, x=240.0, y=180.0}
+Coin{id=12, x=510.0, y=330.0}
+Coin{id=11, x=240.0, y=330.0}
+Coin{id=7, x=510.0, y=180.0}
+Coin{id=12, x=510.0, y=330.0}
+Coin{id=11, x=240.0, y=330.0}
+Coin{id=15, x=240.0, y=270.0}
+Coin{id=14, x=30.0, y=330.0}
+Coin{id=11, x=240.0, y=330.0}
+Coin{id=13, x=30.0, y=270.0}
+Coin{id=14, x=30.0, y=330.0}
+Coin{id=15, x=240.0, y=270.0}
+Coin{id=13, x=30.0, y=270.0}
+Coin{id=3, x=30.0, y=180.0}
+Coin{id=13, x=30.0, y=270.0}
+Coin{id=5, x=240.0, y=120.0}
+Coin{id=2, x=240.0, y=30.0}
+Coin{id=9, x=390.0, y=120.0}
+Coin{id=5, x=240.0, y=120.0}
+Coin{id=15, x=240.0, y=270.0}
+Coin{id=4, x=240.0, y=180.0}
+Mur{id=1, coinDebut=1, coinFin=2, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=1}
+Mur{id=2, coinDebut=2, coinFin=4, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=1, IdNiveau=1}
+Mur{id=3, coinDebut=5, coinFin=4, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=6, IdNiveau=1}
+Mur{id=4, coinDebut=3, coinFin=1, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=1}
+Mur{id=5, coinDebut=3, coinFin=4, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=5, IdNiveau=1}
+Mur{id=6, coinDebut=5, coinFin=6, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=6, IdNiveau=1}
+Mur{id=7, coinDebut=6, coinFin=7, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=6, IdNiveau=1}
+Mur{id=8, coinDebut=7, coinFin=4, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=1}
+Mur{id=9, coinDebut=2, coinFin=8, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=1}
+Mur{id=10, coinDebut=8, coinFin=9, nbPortes=1, nbFenetres=1, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=11, coinDebut=9, coinFin=6, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=12, coinDebut=6, coinFin=10, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=13, coinDebut=10, coinFin=8, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=14, coinDebut=4, coinFin=11, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=1}
+Mur{id=15, coinDebut=11, coinFin=12, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=1}
+Mur{id=16, coinDebut=12, coinFin=7, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=1}
+Mur{id=17, coinDebut=15, coinFin=11, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=18, coinDebut=11, coinFin=14, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=19, coinDebut=14, coinFin=13, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=20, coinDebut=13, coinFin=15, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=1}
+Mur{id=21, coinDebut=13, coinFin=3, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=1}
+Mur{id=22, coinDebut=2, coinFin=5, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=1}
+Mur{id=23, coinDebut=5, coinFin=9, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=1}
+Mur{id=24, coinDebut=4, coinFin=15, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=1}
+Piece{id=1, idAppartement=1, sol=1, plafond=1, Murs={1,2,4,5}}
+Plafond{id=1, Coins={3,1,4,2}, IdRevetement=1, IdPiece=1}
+Sol{id=1, Coins={3,1,4,2}, IdRevetement=2, IdPiece=1}
+Piece{id=2, idAppartement=1, sol=2, plafond=2, Murs={9,10,22,23}}
+Plafond{id=2, Coins={5,8,9,2}, IdRevetement=9, IdPiece=2}
+Sol{id=2, Coins={5,8,9,2}, IdRevetement=14, IdPiece=2}
+Piece{id=3, idAppartement=1, sol=3, plafond=3, Murs={10,11,12,13}}
+Plafond{id=3, Coins={10,8,9,6}, IdRevetement=8, IdPiece=3}
+Sol{id=3, Coins={10,8,9,6}, IdRevetement=2, IdPiece=3}
+Piece{id=4, idAppartement=1, sol=4, plafond=4, Murs={3,6,7,8}}
+Plafond{id=4, Coins={5,4,7,6}, IdRevetement=9, IdPiece=4}
+Sol{id=4, Coins={5,4,7,6}, IdRevetement=13, IdPiece=4}
+Piece{id=5, idAppartement=2, sol=5, plafond=5, Murs={8,14,15,16}}
+Plafond{id=5, Coins={4,7,11,12}, IdRevetement=8, IdPiece=5}
+Sol{id=5, Coins={4,7,11,12}, IdRevetement=4, IdPiece=5}
+Piece{id=6, idAppartement=2, sol=6, plafond=6, Murs={5,20,21,24}}
+Plafond{id=6, Coins={3,4,13,15}, IdRevetement=1, IdPiece=6}
+Sol{id=6, Coins={3,4,13,15}, IdRevetement=15, IdPiece=6}
+Piece{id=7, idAppartement=2, sol=7, plafond=7, Murs={17,18,19,20}}
+Plafond{id=7, Coins={13,11,15,14}, IdRevetement=1, IdPiece=7}
+Sol{id=7, Coins={13,11,15,14}, IdRevetement=16, IdPiece=7}
+Appartement{id=1, niveau=1, Pieces={1,2,3,4}}
+Appartement{id=2, niveau=1, Pieces={5,6,7}}
+Niveau{id=2, ListeAppartements={3, 4}}
+Coin{id=19, x=30.0, y=210.0}
+Coin{id=16, x=30.0, y=30.0}
+Coin{id=18, x=120.0, y=210.0}
+Coin{id=19, x=30.0, y=210.0}
+Coin{id=17, x=120.0, y=30.0}
+Coin{id=18, x=120.0, y=210.0}
+Coin{id=22, x=120.0, y=120.0}
+Coin{id=17, x=120.0, y=30.0}
+Coin{id=18, x=120.0, y=210.0}
+Coin{id=22, x=120.0, y=120.0}
+Coin{id=17, x=120.0, y=30.0}
+Coin{id=16, x=30.0, y=30.0}
+Coin{id=20, x=330.0, y=30.0}
+Coin{id=17, x=120.0, y=30.0}
+Coin{id=21, x=330.0, y=120.0}
+Coin{id=20, x=330.0, y=30.0}
+Coin{id=22, x=120.0, y=120.0}
+Coin{id=21, x=330.0, y=120.0}
+Coin{id=23, x=330.0, y=210.0}
+Coin{id=18, x=120.0, y=210.0}
+Coin{id=21, x=330.0, y=120.0}
+Coin{id=23, x=330.0, y=210.0}
+Coin{id=24, x=30.0, y=330.0}
+Coin{id=19, x=30.0, y=210.0}
+Coin{id=25, x=330.0, y=330.0}
+Coin{id=24, x=30.0, y=330.0}
+Coin{id=23, x=330.0, y=210.0}
+Coin{id=25, x=330.0, y=330.0}
+Coin{id=27, x=480.0, y=270.0}
+Coin{id=26, x=330.0, y=270.0}
+Coin{id=28, x=480.0, y=330.0}
+Coin{id=27, x=480.0, y=270.0}
+Coin{id=25, x=330.0, y=330.0}
+Coin{id=28, x=480.0, y=330.0}
+Coin{id=26, x=330.0, y=270.0}
+Coin{id=25, x=330.0, y=330.0}
+Coin{id=29, x=480.0, y=30.0}
+Coin{id=20, x=330.0, y=30.0}
+Coin{id=27, x=480.0, y=270.0}
+Coin{id=29, x=480.0, y=30.0}
+Coin{id=20, x=330.0, y=30.0}
+Coin{id=26, x=330.0, y=270.0}
+Coin{id=23, x=330.0, y=210.0}
+Coin{id=19, x=30.0, y=210.0}
+Mur{id=25, coinDebut=16, coinFin=19, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=26, coinDebut=19, coinFin=18, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=27, coinDebut=18, coinFin=17, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=28, coinDebut=17, coinFin=22, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=29, coinDebut=22, coinFin=18, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=2}
+Mur{id=30, coinDebut=16, coinFin=17, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=31, coinDebut=17, coinFin=20, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=2}
+Mur{id=32, coinDebut=20, coinFin=21, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=2}
+Mur{id=33, coinDebut=21, coinFin=22, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=2}
+Mur{id=34, coinDebut=18, coinFin=23, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=2}
+Mur{id=35, coinDebut=23, coinFin=21, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=5, IdNiveau=2}
+Mur{id=36, coinDebut=19, coinFin=24, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=2, IdNiveau=2}
+Mur{id=37, coinDebut=24, coinFin=25, nbPortes=0, nbFenetres=2, hauteur=3.0, IdRevetement=5, IdNiveau=2}
+Mur{id=38, coinDebut=25, coinFin=23, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=2}
+Mur{id=39, coinDebut=26, coinFin=27, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=2}
+Mur{id=40, coinDebut=27, coinFin=28, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=5, IdNiveau=2}
+Mur{id=41, coinDebut=28, coinFin=25, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=2}
+Mur{id=42, coinDebut=25, coinFin=26, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=43, coinDebut=20, coinFin=29, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=44, coinDebut=29, coinFin=27, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=45, coinDebut=26, coinFin=20, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Mur{id=46, coinDebut=19, coinFin=23, nbPortes=2, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=2}
+Piece{id=8, idAppartement=3, sol=8, plafond=8, Murs={39,43,44,45}}
+Plafond{id=8, Coins={29,26,27,20}, IdRevetement=3, IdPiece=8}
+Sol{id=8, Coins={29,26,27,20}, IdRevetement=11, IdPiece=8}
+Piece{id=9, idAppartement=4, sol=9, plafond=9, Murs={28,31,32,33}}
+Plafond{id=9, Coins={21,22,17,20}, IdRevetement=1, IdPiece=9}
+Sol{id=9, Coins={21,22,17,20}, IdRevetement=11, IdPiece=9}
+Piece{id=10, idAppartement=4, sol=10, plafond=10, Murs={29,33,34,35}}
+Plafond{id=10, Coins={21,22,23,18}, IdRevetement=8, IdPiece=10}
+Sol{id=10, Coins={21,22,23,18}, IdRevetement=14, IdPiece=10}
+Piece{id=11, idAppartement=3, sol=11, plafond=11, Murs={39,40,41,42}}
+Plafond{id=11, Coins={26,25,27,28}, IdRevetement=1, IdPiece=11}
+Sol{id=11, Coins={26,25,27,28}, IdRevetement=2, IdPiece=11}
+Piece{id=12, idAppartement=3, sol=12, plafond=12, Murs={36,37,38,46}}
+Plafond{id=12, Coins={23,24,25,19}, IdRevetement=3, IdPiece=12}
+Sol{id=12, Coins={23,24,25,19}, IdRevetement=16, IdPiece=12}
+Piece{id=13, idAppartement=4, sol=13, plafond=13, Murs={25,26,27,30}}
+Plafond{id=13, Coins={18,17,16,19}, IdRevetement=3, IdPiece=13}
+Sol{id=13, Coins={18,17,16,19}, IdRevetement=3, IdPiece=13}
+Appartement{id=3, niveau=2, Pieces={8,11,12}}
+Appartement{id=4, niveau=2, Pieces={9,10,13}}
+Niveau{id=3, ListeAppartements={5, 6}}
+Coin{id=31, x=540.0, y=30.0}
+Coin{id=30, x=30.0, y=30.0}
+Coin{id=32, x=540.0, y=150.0}
+Coin{id=31, x=540.0, y=30.0}
+Coin{id=38, x=420.0, y=150.0}
+Coin{id=32, x=540.0, y=150.0}
+Coin{id=39, x=210.0, y=150.0}
+Coin{id=38, x=420.0, y=150.0}
+Coin{id=33, x=30.0, y=150.0}
+Coin{id=39, x=210.0, y=150.0}
+Coin{id=30, x=30.0, y=30.0}
+Coin{id=33, x=30.0, y=150.0}
+Coin{id=32, x=540.0, y=150.0}
+Coin{id=33, x=30.0, y=150.0}
+Coin{id=37, x=540.0, y=240.0}
+Coin{id=32, x=540.0, y=150.0}
+Coin{id=36, x=420.0, y=240.0}
+Coin{id=37, x=540.0, y=240.0}
+Coin{id=38, x=420.0, y=150.0}
+Coin{id=36, x=420.0, y=240.0}
+Coin{id=35, x=210.0, y=240.0}
+Coin{id=36, x=420.0, y=240.0}
+Coin{id=39, x=210.0, y=150.0}
+Coin{id=35, x=210.0, y=240.0}
+Coin{id=34, x=30.0, y=240.0}
+Coin{id=35, x=210.0, y=240.0}
+Coin{id=33, x=30.0, y=150.0}
+Coin{id=34, x=30.0, y=240.0}
+Coin{id=40, x=30.0, y=330.0}
+Coin{id=34, x=30.0, y=240.0}
+Coin{id=41, x=540.0, y=330.0}
+Coin{id=40, x=30.0, y=330.0}
+Coin{id=37, x=540.0, y=240.0}
+Coin{id=41, x=540.0, y=330.0}
+Coin{id=37, x=540.0, y=240.0}
+Coin{id=34, x=30.0, y=240.0}
+Mur{id=47, coinDebut=30, coinFin=31, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=3}
+Mur{id=48, coinDebut=31, coinFin=32, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=3}
+Mur{id=49, coinDebut=32, coinFin=38, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=3}
+Mur{id=50, coinDebut=38, coinFin=39, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=3}
+Mur{id=51, coinDebut=39, coinFin=33, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=6, IdNiveau=3}
+Mur{id=52, coinDebut=33, coinFin=30, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=3}
+Mur{id=53, coinDebut=33, coinFin=32, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=8, IdNiveau=3}
+Mur{id=54, coinDebut=32, coinFin=37, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=3}
+Mur{id=55, coinDebut=37, coinFin=36, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=1, IdNiveau=3}
+Mur{id=56, coinDebut=36, coinFin=38, nbPortes=2, nbFenetres=1, hauteur=3.0, IdRevetement=1, IdNiveau=3}
+Mur{id=57, coinDebut=36, coinFin=35, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=5, IdNiveau=3}
+Mur{id=58, coinDebut=35, coinFin=39, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=3}
+Mur{id=59, coinDebut=35, coinFin=34, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=6, IdNiveau=3}
+Mur{id=60, coinDebut=34, coinFin=33, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=3, IdNiveau=3}
+Mur{id=61, coinDebut=34, coinFin=40, nbPortes=1, nbFenetres=0, hauteur=3.0, IdRevetement=3, IdNiveau=3}
+Mur{id=62, coinDebut=40, coinFin=41, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=2, IdNiveau=3}
+Mur{id=63, coinDebut=41, coinFin=37, nbPortes=0, nbFenetres=0, hauteur=3.0, IdRevetement=7, IdNiveau=3}
+Mur{id=64, coinDebut=34, coinFin=37, nbPortes=0, nbFenetres=1, hauteur=3.0, IdRevetement=4, IdNiveau=3}
+Piece{id=14, idAppartement=5, sol=14, plafond=14, Murs={47,48,52,53}}
+Plafond{id=14, Coins={30,33,32,31}, IdRevetement=3, IdPiece=14}
+Sol{id=14, Coins={30,33,32,31}, IdRevetement=2, IdPiece=14}
+Piece{id=15, idAppartement=5, sol=15, plafond=15, Murs={49,54,55,56}}
+Plafond{id=15, Coins={38,32,36,37}, IdRevetement=1, IdPiece=15}
+Sol{id=15, Coins={38,32,36,37}, IdRevetement=2, IdPiece=15}
+Piece{id=16, idAppartement=5, sol=16, plafond=16, Murs={50,56,57,58}}
+Plafond{id=16, Coins={39,38,36,35}, IdRevetement=1, IdPiece=16}
+Sol{id=16, Coins={39,38,36,35}, IdRevetement=3, IdPiece=16}
+Piece{id=17, idAppartement=6, sol=17, plafond=17, Murs={51,58,59,60}}
+Plafond{id=17, Coins={33,39,35,34}, IdRevetement=8, IdPiece=17}
+Sol{id=17, Coins={33,39,35,34}, IdRevetement=4, IdPiece=17}
+Piece{id=18, idAppartement=6, sol=18, plafond=18, Murs={61,62,63,64}}
+Plafond{id=18, Coins={40,41,34,37}, IdRevetement=1, IdPiece=18}
+Sol{id=18, Coins={40,41,34,37}, IdRevetement=11, IdPiece=18}
+Appartement{id=5, niveau=3, Pieces={14,15,16}}
+Appartement{id=6, niveau=3, Pieces={17,18}}
+Revetements{id=1, designation=Peinture, pourMur=true, pourSol=false, pourPlafond=true, Prixunitaire=10.95, echelle=30}
+Revetements{id=2, designation=Carrelage, pourMur=true, pourSol=true, pourPlafond=false, Prixunitaire=49.75, echelle=30}
+Revetements{id=3, designation=Lambris, pourMur=true, pourSol=true, pourPlafond=true, Prixunitaire=50.6, echelle=30}
+Revetements{id=4, designation=Marbre, pourMur=true, pourSol=true, pourPlafond=false, Prixunitaire=97.85, echelle=30}
+Revetements{id=5, designation=Crepi, pourMur=true, pourSol=false, pourPlafond=false, Prixunitaire=67.8, echelle=30}
+Revetements{id=6, designation=Papier peint, pourMur=true, pourSol=false, pourPlafond=false, Prixunitaire=32.9, echelle=30}
+Revetements{id=7, designation=Plaquettes de parement, pourMur=true, pourSol=false, pourPlafond=false, Prixunitaire=15.2, echelle=30}
+Revetements{id=8, designation=Peinture, pourMur=true, pourSol=false, pourPlafond=true, Prixunitaire=77.3, echelle=30}
+Revetements{id=9, designation=Peinture, pourMur=true, pourSol=false, pourPlafond=true, Prixunitaire=29.9, echelle=30}
+Revetements{id=10, designation=Carrelage, pourMur=true, pourSol=true, pourPlafond=false, Prixunitaire=89.45, echelle=30}
+Revetements{id=11, designation=Lambris, pourMur=true, pourSol=true, pourPlafond=false, Prixunitaire=42.5, echelle=30}
+Revetements{id=12, designation=Liege, pourMur=true, pourSol=false, pourPlafond=false, Prixunitaire=25.4, echelle=30}
+Revetements{id=13, designation=Parquet, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=46.36, echelle=30}
+Revetements{id=14, designation=Vinyle Lino, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=23.55, echelle=30}
+Revetements{id=15, designation=Moquette, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=48.1, echelle=30}
+Revetements{id=16, designation=Stratifie, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=31.99, echelle=30}
+Revetements{id=17, designation=Gazon, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=17.95, echelle=30}
+Revetements{id=18, designation=Liege, pourMur=false, pourSol=true, pourPlafond=false, Prixunitaire=33.9, echelle=30}

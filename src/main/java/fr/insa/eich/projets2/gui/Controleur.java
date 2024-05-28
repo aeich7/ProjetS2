@@ -107,7 +107,7 @@ public class Controleur {
             alert.getDialogPane().setMinHeight(100);
             alert.setTitle("Crédits élèves");
             alert.setHeaderText(null);
-            alert.setContentText("Créé par Eich Aurélien le boss, Merckling Bruno et Kerloc'h Hotalu");
+            alert.setContentText("Créé par Eich Aurélien , Merckling Bruno et Kerloc'h Hotaru");
             alert.showAndWait();
     }
     public void Aide_échelle(){
@@ -135,6 +135,9 @@ public class Controleur {
     }
     
     public void NouveauProjet() {
+        if (!(this.dBatiment == null)){
+            dBatiment.setCurrentData(null);
+        }
         Stage newWindow = new Stage();
         newWindow.initModality(Modality.APPLICATION_MODAL);
         GridPane grid = new GridPane();
@@ -205,17 +208,17 @@ public class Controleur {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers Texte", "*.txt"));
             File selectedFile = fileChooser.showOpenDialog(newWindow);
             if (selectedFile != null) {
-            int lignes = Comptageligne(selectedFile.getAbsolutePath());
-            String[][] contenu = new String[lignes][6]; 
-            contenu = Tableau(selectedFile.getAbsolutePath(), contenu);
-            revetements = contenu; 
-            revetsPourPlafond = plafond(revetements);
-            revetsPourMur = mur(revetements);
-            revetsPourSol = sol(revetements);
+                int lignes = Comptageligne(selectedFile.getAbsolutePath());
+                String[][] contenu = new String[lignes][6]; 
+                contenu = Tableau(selectedFile.getAbsolutePath(), contenu);
+                revetements = contenu; 
+                revetsPourPlafond = plafond(revetements);
+                revetsPourMur = mur(revetements);
+                revetsPourSol = sol(revetements);  
+                selectFileButton.setDisable(true);
+                selectFileButton.setText("Fichier chargé");
+            }
             
-        }
-            
-
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fichier chargé");
             alert.setHeaderText(null);
@@ -981,7 +984,8 @@ public class Controleur {
     
         }
     
-    public static Batiment chargerBatiment(File fichier) {
+    public static Batiment chargerBatiment(File fichier) { //Cette méthode se base sur le découpage du fichier txt par lignes, en regardant le type de l'objet au début de la ligne.
+        //Chaque ligne est ensuite traitée par les différentes méthodes ci-dessous, se basant sur le ", " pour découper la ligne et ensuite récupérer les informations derrière chaque "=" (.split("="))
         Batiment batiment = null;
         Map<Integer, Niveau> niveaux = new HashMap<>();
         Map<Integer, Coin> coins = new HashMap<>();
@@ -1005,8 +1009,8 @@ public class Controleur {
                     Coin coin = parseCoin(line);
                     coins.put(coin.getId(), coin);
                 } else if (line.startsWith("Piece")) {
-                        Piece piece = parsePiece(line, coins, murs);
-                        pieces.put(piece.getId(), piece);
+                    Piece piece = parsePiece(line, coins, murs);
+                    pieces.put(piece.getId(), piece);
                 } else if (line.startsWith("Plafond")) {
                     Plafond plafond = parsePlafond(line, coins);
                     pieces.get(plafond.getIdPiece()).setPlafond(plafond);
@@ -1035,6 +1039,7 @@ public class Controleur {
             }
         
         for (Piece piece : pieces.values()){
+            System.out.println(piece);
             if (batiment.getType().equals("Immeuble")){
                 int idAppart = piece.getIdAppartement();
                 appartements.get(idAppart).AjouterPiece(piece);
@@ -1068,7 +1073,7 @@ public class Controleur {
         return batiment;
     }
 
-    private static Batiment parseBatiment(String line) {
+    private static Batiment parseBatiment(String line) { //Méthode permettant de récupérer les informations enregistrées pour un Batiment
         // Supprimer la partie "ListeNiveaux={...}" de la ligne
         int startIndexOfLevels = line.indexOf("ListeNiveaux={");
         int endIndexOfLevels = line.indexOf("}", startIndexOfLevels);
@@ -1090,7 +1095,7 @@ public class Controleur {
         return bat;
     }
 
-    private static Niveau parseNiveau(String line) {
+    private static Niveau parseNiveau(String line) { //Méthode permettant de récupérer les informations enregistrées pour un Niveau
         // Example: Niveau{id=1, ListeAppartements={1, 2}}
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
@@ -1100,7 +1105,7 @@ public class Controleur {
         return niv;
     }
 
-    private static Mur parseMur(String line, Map<Integer, Coin> coins) {
+    private static Mur parseMur(String line, Map<Integer, Coin> coins) { //Méthode permettant de récupérer les informations enregistrées pour un Mur
         // Example: Mur{id=1, coinDebut=1, coinFin=2, nbPortes=2, nbFenetres=1, hauteur=2.0, IdRevetement=2}
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
@@ -1126,6 +1131,7 @@ public class Controleur {
             }
         }
         Mur mur = new Mur(coinDebut,coinFin,hauteur);
+        mur.setId(id);
         mur.setIdRevetement(idRevetement);
         mur.setNbFenetres(nbFenetres);
         mur.setNbPortes(nbPortes);
@@ -1134,7 +1140,7 @@ public class Controleur {
         return mur;
     }
 
-    private static Coin parseCoin(String line) {
+    private static Coin parseCoin(String line) { //Méthode permettant de récupérer les informations enregistrées pour un Coin
         // Example: Coin{id=1, x=60.0, y=60.0}
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
@@ -1146,17 +1152,16 @@ public class Controleur {
         double y = Double.parseDouble(parts[2].split("=")[1]);
         Coin coin =new Coin(x, y);
         coin.setId(id);
-        System.out.println(coin);
         return coin;
     }
 
-    private static Piece parsePiece(String line, Map<Integer, Coin> coins, Map<Integer, Mur> murs) {
+    private static Piece parsePiece(String line, Map<Integer, Coin> coins, Map<Integer, Mur> murs) { //Méthode permettant de récupérer les informations enregistrées pour une pièce
         
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
-        System.out.println(id);
         int idAppartement = Integer.parseInt(parts[1].split("=")[1]);
         List<Integer> ListeMurs = parseMurIds(parts[4].split("=")[1]);
+        System.out.println("Test : "+ListeMurs);
         Piece piece = new Piece();
         for (Map.Entry<Integer, Mur> Mur : murs.entrySet()){
             for (int MurId : ListeMurs){
@@ -1165,20 +1170,15 @@ public class Controleur {
                 }
             }
             
-        }
-
-        
+        }    
         piece.setIdAppartement(idAppartement);
         piece.setId(id);
-        //System.out.println(piece.getListeMurs());
-        //System.out.println(piece.getId());
         return piece;
     }
 
-    private static Plafond parsePlafond(String line, Map<Integer, Coin> coins) {
-        // Example: Plafond{id=1, Coins={1, 4, 2, 3}, IdRevetement=1}
+    private static Plafond parsePlafond(String line, Map<Integer, Coin> coins) { //Méthode permettant de récupérer les informations enregistrées pour un plafond
+        // Example: Plafond{id=1, Coins={1,4,2,3}, IdRevetement=1}
         String[] parts = line.split(", ");
-        System.out.println(parts[2].split("=")[0]);
         int id = Integer.parseInt(parts[0].split("=")[1]);
         List<Integer> coinList = parseCoinIds(parts[1].split("=")[1]);
         int idRevetement = Integer.parseInt(parts[2].split("=")[1]);
@@ -1195,7 +1195,6 @@ public class Controleur {
             }
             
         }
-        System.out.println(plafond.getCoins());
         plafond.setIdRevetement(idRevetement);
         plafond.setId(id);
         plafond.setIdPiece(idPiece);
@@ -1203,8 +1202,8 @@ public class Controleur {
         return plafond;
     }
 
-    private static Sol parseSol(String line, Map<Integer, Coin> coins) {
-        // Example: Sol{id=1, Coins={1, 4, 2, 3}, IdRevetement=2}
+    private static Sol parseSol(String line, Map<Integer, Coin> coins) { //Méthode permettant de récupérer les informations enregistrées pour un sol
+        // Example: Sol{id=1, Coins={1,4,2,3}, IdRevetement=2}
         String[] parts = line.split(", ");
         System.out.println(parts.length);
         int id = Integer.parseInt(parts[0].split("=")[1]);
@@ -1222,7 +1221,7 @@ public class Controleur {
                 }
             } 
         }
-        sol.setIdPiece(id);
+        sol.setIdPiece(idPiece);
         sol.setIdRevetement(idRevetement);
         sol.setId(id);
         System.out.println(sol);
@@ -1231,24 +1230,26 @@ public class Controleur {
 
     
 
-    private static Appartement parseAppartement(String line) {
-        // Example: Appartement{id=1, niveau=0, ListePieces=[Piece{id=1, idAppartement=1, sol=Sol{id=1, Coins={1, 4, 2, 3}, IdRevetement=2}, plafond=Plafond{id=1, Coins={1, 4, 2, 3}, IdRevetement=1}, Murs={1, 2, 3, 4}}]}
+    private static Appartement parseAppartement(String line) {//Méthode permettant de récupérer les informations enregistrées pour un appartement
+        
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
         // Supprimer les accolades à la fin de la chaîne si elles existent
         if (parts[1].endsWith("}")) {
             parts[1] = parts[1].substring(0, parts[1].length() - 1);
         }
-        int niveau = Integer.parseInt(parts[1].split("=")[1]);
-        
-        // Parsing Pieces should be done separately
-        Appartement appart = new Appartement(niveau);
+        int niveau = Integer.parseInt(parts[1].split("=")[1]); 
+        if (parts[2].endsWith("}")) {
+        parts[2] = parts[2].substring(0, parts[2].length() - 1);
+        }
+        List<Integer> PieceList = parsePiecesIds(parts[2].split("=")[1]);;
+        Appartement appart = new Appartement(niveau);         
         appart.setId(id);
         System.out.println(appart);
         return appart;
     }
 
-    private static Revetements parseRevetement(String line) {
+    private static Revetements parseRevetement(String line) { //Méthode permettant de récupérer les informations enregistrées pour un revêtement
         // Example: Revetements{id=1, designation=Peinture, pourMur=true, pourSol=false, pourPlafond=true, Prixunitaire=10.95}
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
@@ -1266,7 +1267,7 @@ public class Controleur {
         return new Revetements(id, designation, pourMur, pourSol, pourPlafond, prixUnitaire, echelle);
     }
     
-    private static List<Integer> parseCoinIds(String coinStr) {
+    private static List<Integer> parseCoinIds(String coinStr) { //Méthode permettant de récupérer les ids de Coins contenu dans les Sols et Plafonds
     coinStr = coinStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
     String[] coinIds = coinStr.replace("Coins={", "").replace("}", "").split(",");
     List<Integer> coinIdList = new ArrayList<>();
@@ -1277,8 +1278,8 @@ public class Controleur {
     return coinIdList;
 }
     
-    private static List<Integer> parseMurIds(String murStr) {
-    // Example: Murs={1, 2, 3, 4}
+    private static List<Integer> parseMurIds(String murStr) { //Méthode permettant de récupérer les ids de Mur contenu dans les pièces
+    // Example: Murs={1,2,3,4}
     //System.out.print(murStr);
     murStr = murStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
     String[] murIds = murStr.replace("Murs={", "").replace("}", "").split(",");
@@ -1287,14 +1288,46 @@ public class Controleur {
     for (String murId : murIds) {
         murIdList.add(Integer.parseInt(murId));
     }
+    System.out.println(murIdList);
     return murIdList;
+}
+     private static List<Integer> parsePiecesIds(String pieceStr) { //Méthode permettant de récupérer les ids de Mur contenu dans les pièces
+    // Example: Murs={1,2,3,4}
+    //System.out.print(murStr);
+    pieceStr = pieceStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
+    String[] pieceIds = pieceStr.replace("Pieces={", "").replace("}", "").split(",");
+    //System.out.println(Arrays.toString(murIds));
+    List<Integer> pieceIdList = new ArrayList<>();
+    if(pieceIds[0] == ""){
+        return pieceIdList;
+    }
+    for (String pieceId : pieceIds) {
+        pieceIdList.add(Integer.parseInt(pieceId));
+    }
+    return pieceIdList;
 }
 
     public void setdBatiment(Donnees<Batiment> dBatiment) {
         this.dBatiment = dBatiment;
     }
 
+    public void setRevetements(String[][] revetements) {
+        this.revetements = revetements;
+    }
 
+    public void setRevetsPourMur(String[][] revetsPourMur) {
+        this.revetsPourMur = revetsPourMur;
+    }
+
+    public void setRevetsPourSol(String[][] revetsPourSol) {
+        this.revetsPourSol = revetsPourSol;
+    }
+
+    public void setRevetsPourPlafond(String[][] revetsPourPlafond) {
+        this.revetsPourPlafond = revetsPourPlafond;
+    }
+
+    
     
     
 }

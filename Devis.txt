@@ -1,0 +1,39 @@
+
+Revêtement numéro : 1 .Désignation : Peinture .Surface totale : 511.38200000000006m2.Prix total : 5599.6329000000005€.
+--------------------------------------------------
+Revêtement numéro : 2 .Désignation : Carrelage .Surface totale : 364.47800000000007m2.Prix total : 18132.780500000004€.
+--------------------------------------------------
+Revêtement numéro : 3 .Désignation : Lambris .Surface totale : 360.70000000000005m2.Prix total : 18251.420000000002€.
+--------------------------------------------------
+Revêtement numéro : 4 .Désignation : Marbre .Surface totale : 113.952m2.Prix total : 11150.2032€.
+--------------------------------------------------
+Revêtement numéro : 5 .Désignation : Crepi .Surface totale : 107.77799999999999m2.Prix total : 7307.348399999999€.
+--------------------------------------------------
+Revêtement numéro : 6 .Désignation : Papier peint .Surface totale : 74.889m2.Prix total : 2463.8480999999997€.
+--------------------------------------------------
+Revêtement numéro : 7 .Désignation : Plaquettes de parement .Surface totale : 9.0m2.Prix total : 136.79999999999998€.
+--------------------------------------------------
+Revêtement numéro : 8 .Désignation : Peinture .Surface totale : 347.811m2.Prix total : 26885.790299999997€.
+--------------------------------------------------
+Revêtement numéro : 9 .Désignation : Peinture .Surface totale : 33.0m2.Prix total : 986.6999999999999€.
+--------------------------------------------------
+Revêtement numéro : 10 .Désignation : Carrelage .Surface totale : 0.0m2.Prix total : 0.0€.
+--------------------------------------------------
+Revêtement numéro : 11 .Désignation : Lambris .Surface totale : 112.0m2.Prix total : 4760.0€.
+--------------------------------------------------
+Revêtement numéro : 12 .Désignation : Liege .Surface totale : 0.0m2.Prix total : 0.0€.
+--------------------------------------------------
+Revêtement numéro : 13 .Désignation : Parquet .Surface totale : 18.0m2.Prix total : 834.48€.
+--------------------------------------------------
+Revêtement numéro : 14 .Désignation : Vinyle Lino .Surface totale : 36.0m2.Prix total : 847.8000000000001€.
+--------------------------------------------------
+Revêtement numéro : 15 .Désignation : Moquette .Surface totale : 21.0m2.Prix total : 1010.1€.
+--------------------------------------------------
+Revêtement numéro : 16 .Désignation : Stratifie .Surface totale : 54.0m2.Prix total : 1727.4599999999998€.
+--------------------------------------------------
+Revêtement numéro : 17 .Désignation : Gazon .Surface totale : 0.0m2.Prix total : 0.0€.
+--------------------------------------------------
+Revêtement numéro : 18 .Désignation : Liege .Surface totale : 0.0m2.Prix total : 0.0€.
+--------------------------------------------------
+
+Prix total du batiment : 100094.36340000002€.
