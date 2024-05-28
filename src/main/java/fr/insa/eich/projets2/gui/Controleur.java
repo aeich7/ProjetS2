@@ -590,7 +590,6 @@ public class Controleur {
                     piece.setSol(Sol);
                     niveauActuel.addPiece(piece);
                     mursSelectionnes.clear();// Nettoyer la liste après la création de la pièce
-                    System.out.println(piece.toString()); 
                     redessiner(); // Redessine les murs sans surlignage 
                 } else {
                     System.out.println("Une pièce identique existe déjà.");
@@ -754,7 +753,6 @@ public class Controleur {
             else {
                 this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).AjouterPiece(PieceProche); //Ajoute la pièce dans l'appartement
                 System.out.println("Pièce numéro "+ PieceProche.getId()+" ajoutée à l'appartement numéro : "+ this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).getId()+" !" );
-                System.out.println(this.dBatiment.getCurrentData().getListeNiveaux().get(niveauIndex).getListeAppartement().get(PosAppartDansListe).toString()); //Ligne de test
             }
             redessiner();
         }
@@ -1009,7 +1007,7 @@ public class Controleur {
                     Coin coin = parseCoin(line);
                     coins.put(coin.getId(), coin);
                 } else if (line.startsWith("Piece")) {
-                    Piece piece = parsePiece(line, coins, murs);
+                    Piece piece = parsePiece(line, murs);
                     pieces.put(piece.getId(), piece);
                 } else if (line.startsWith("Plafond")) {
                     Plafond plafond = parsePlafond(line, coins);
@@ -1028,7 +1026,6 @@ public class Controleur {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(niveaux.get(0));
         for(Mur murs2 : murs.values()){
             int idNiveau = murs2.getIdNiveau();
             niveaux.get(idNiveau).addMur(murs2);
@@ -1039,7 +1036,6 @@ public class Controleur {
             }
         
         for (Piece piece : pieces.values()){
-            System.out.println(piece);
             if (batiment.getType().equals("Immeuble")){
                 int idAppart = piece.getIdAppartement();
                 appartements.get(idAppart).AjouterPiece(piece);
@@ -1091,7 +1087,6 @@ public class Controleur {
         // Créer et retourner l'objet Batiment
         Batiment bat = new Batiment(type, nom);
         bat.setId(id);
-        System.out.print(bat);
         return bat;
     }
 
@@ -1101,7 +1096,6 @@ public class Controleur {
         int id = Integer.parseInt(parts[0].split("=")[1]);
         Niveau niv = new Niveau();
         niv.setId(id);
-        System.out.println(niv);
         return niv;
     }
 
@@ -1136,7 +1130,6 @@ public class Controleur {
         mur.setNbFenetres(nbFenetres);
         mur.setNbPortes(nbPortes);
         mur.setIdNiveau(idNiveau);
-        System.out.println(mur);
         return mur;
     }
 
@@ -1155,13 +1148,12 @@ public class Controleur {
         return coin;
     }
 
-    private static Piece parsePiece(String line, Map<Integer, Coin> coins, Map<Integer, Mur> murs) { //Méthode permettant de récupérer les informations enregistrées pour une pièce
+    private static Piece parsePiece(String line, Map<Integer, Mur> murs) { //Méthode permettant de récupérer les informations enregistrées pour une pièce
         
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
         int idAppartement = Integer.parseInt(parts[1].split("=")[1]);
         List<Integer> ListeMurs = parseMurIds(parts[4].split("=")[1]);
-        System.out.println("Test : "+ListeMurs);
         Piece piece = new Piece();
         for (Map.Entry<Integer, Mur> Mur : murs.entrySet()){
             for (int MurId : ListeMurs){
@@ -1198,14 +1190,12 @@ public class Controleur {
         plafond.setIdRevetement(idRevetement);
         plafond.setId(id);
         plafond.setIdPiece(idPiece);
-        System.out.println(plafond);
         return plafond;
     }
 
     private static Sol parseSol(String line, Map<Integer, Coin> coins) { //Méthode permettant de récupérer les informations enregistrées pour un sol
         // Example: Sol{id=1, Coins={1,4,2,3}, IdRevetement=2}
         String[] parts = line.split(", ");
-        System.out.println(parts.length);
         int id = Integer.parseInt(parts[0].split("=")[1]);
         List<Integer> coinList = parseCoinIds(parts[1].split("=")[1]);
         int idRevetement = Integer.parseInt(parts[2].split("=")[1]);
@@ -1224,7 +1214,6 @@ public class Controleur {
         sol.setIdPiece(idPiece);
         sol.setIdRevetement(idRevetement);
         sol.setId(id);
-        System.out.println(sol);
         return sol;
     }
 
@@ -1245,7 +1234,6 @@ public class Controleur {
         List<Integer> PieceList = parsePiecesIds(parts[2].split("=")[1]);;
         Appartement appart = new Appartement(niveau);         
         appart.setId(id);
-        System.out.println(appart);
         return appart;
     }
 
@@ -1272,9 +1260,8 @@ public class Controleur {
     String[] coinIds = coinStr.replace("Coins={", "").replace("}", "").split(",");
     List<Integer> coinIdList = new ArrayList<>();
     for (String coinId : coinIds) {
-        coinIdList.add(Integer.parseInt(coinId)); // Assure-toi de supprimer les espaces en trop
+        coinIdList.add(Integer.parseInt(coinId)); 
     }
-    //System.out.print(coinIdList);
     return coinIdList;
 }
     
@@ -1288,12 +1275,10 @@ public class Controleur {
     for (String murId : murIds) {
         murIdList.add(Integer.parseInt(murId));
     }
-    System.out.println(murIdList);
     return murIdList;
 }
      private static List<Integer> parsePiecesIds(String pieceStr) { //Méthode permettant de récupérer les ids de Mur contenu dans les pièces
-    // Example: Murs={1,2,3,4}
-    //System.out.print(murStr);
+    // Example: Pieces={1,2,3,4}
     pieceStr = pieceStr.replace("{", "").replace("}", ""); // Supprimer les accolades de la chaîne
     String[] pieceIds = pieceStr.replace("Pieces={", "").replace("}", "").split(",");
     //System.out.println(Arrays.toString(murIds));
